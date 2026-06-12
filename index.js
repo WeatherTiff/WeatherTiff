@@ -9,19 +9,17 @@ SplashScreen.hide();
 if (Capacitor.isNativePlatform()) {
   console.log('Running as native app');
   
-  // Listen for messages from your web app
-  window.addEventListener('message', async (event) => {
-    if (event.data.type === 'REQUEST_LOCATION') {
-      try {
-        const position = await Geolocation.getCurrentPosition();
-        // Send location back to web app
-        document.querySelector('iframe')?.contentWindow?.postMessage({
-          type: 'LOCATION_RESULT',
-          coords: position.coords
-        }, 'https://weather-tiff.vercel.app');
-      } catch (error) {
-        console.error('Location error:', error);
-      }
+  // Expose a function that your weather app can call
+  window.getNativeLocation = async function() {
+    try {
+      const position = await Geolocation.getCurrentPosition();
+      return {
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude
+      };
+    } catch (error) {
+      console.error('Location error:', error);
+      return null;
     }
-  });
+  };
 }
