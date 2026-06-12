@@ -1,0 +1,19 @@
+{
+  "appId": "com.yourname.weathertiff",
+  "appName": "WeatherTiff",
+  "webDir": "www",
+  "server": {
+    "url": "https://weather-tiff.vercel.app",
+    "cleartext": false,
+    "androidScheme": "https",
+    "iosScheme": "https",
+    "allowNavigation": ["weather-tiff.vercel.app"]
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 2000,
+      "backgroundColor": "#000000",
+      "showSpinner": false
+    }
+  }
+}
