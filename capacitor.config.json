@@ -1,7 +1,7 @@
 {
   "appId": "com.yourname.weathertiff",
   "appName": "WeatherTiff",
-  "webDir": "webDir",
+  "webDir": ".",
   "server": {
     "url": "https://weather-tiff.vercel.app",
     "cleartext": false,
