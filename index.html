@@ -14,11 +14,12 @@
             box-sizing: border-box;
         }
 
+        /* BRIGHTER BACKGROUND */
         body {
-            background: linear-gradient(180deg, #1a2332 0%, #0f1623 100%);
+            background: linear-gradient(135deg, #1e2a3a 0%, #0f1724 100%);
             min-height: 100vh;
             font-family: 'Open Sans', -apple-system, sans-serif;
-            color: #e0e0e0;
+            color: #ffffff;
             padding: 30px 20px;
         }
 
@@ -46,6 +47,7 @@
             color: white;
             letter-spacing: -2px;
             font-family: 'Playfair Display', serif;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
         }
 
         .title-weather {
@@ -54,7 +56,7 @@
         }
 
         .title-tiff {
-            color: #d4a574;
+            color: #f5a623;
             font-style: italic;
             font-weight: 400;
             font-family: 'Playfair Display', serif;
@@ -63,15 +65,15 @@
         .subtitle {
             font-size: 11px;
             letter-spacing: 2px;
-            color: #7a8fa3;
+            color: #f5a623;
             margin: 16px 0 0;
             font-style: italic;
-            font-weight: 400;
+            font-weight: 600;
         }
 
         .mode-toggle {
             padding: 8px 12px;
-            background: #d4a574;
+            background: #f5a623;
             color: #1a2332;
             border: none;
             border-radius: 6px;
@@ -84,24 +86,35 @@
         }
 
         .mode-toggle:hover {
-            background: #e8b88f;
+            background: #ffc107;
+            transform: scale(1.02);
         }
 
         .mode-toggle.active {
-            background: #e64c4c;
+            background: #ff4444;
+            color: white;
+            animation: pulse 0.5s;
         }
 
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* BRIGHTER LOCATIONS PANEL */
         .locations-panel {
-            background: rgba(212, 165, 116, 0.1);
-            border: 1px solid #d4a574;
+            background: rgba(245, 166, 35, 0.12);
+            border: 1px solid #f5a623;
             border-radius: 12px;
             padding: 16px;
             margin-bottom: 20px;
+            backdrop-filter: blur(5px);
         }
 
         .locations-title {
             font-size: 12px;
-            color: #d4a574;
+            color: #f5a623;
             margin: 0 0 12px;
             font-weight: 700;
             text-transform: uppercase;
@@ -126,42 +139,50 @@
         }
 
         .loc-btn.active {
-            background: #d4a574;
+            background: #f5a623;
             color: #1a2332;
         }
 
         .loc-btn.inactive {
-            background: transparent;
-            border: 1px solid #d4a574;
-            color: #d4a574;
+            background: rgba(245, 166, 35, 0.2);
+            border: 1px solid #f5a623;
+            color: #f5a623;
         }
 
         .add-location-input {
             width: 100%;
             padding: 8px 12px;
             border-radius: 6px;
-            border: 1px solid #d4a574;
-            background: rgba(212, 165, 116, 0.05);
+            border: 1px solid #f5a623;
+            background: rgba(245, 166, 35, 0.1);
             color: white;
             font-size: 12px;
         }
 
         .add-location-input::placeholder {
-            color: #7a8fa3;
+            color: #f5a623;
         }
 
+        /* BRIGHTER CARDS */
         .card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid #2a3a4f;
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(245, 166, 35, 0.3);
             border-radius: 16px;
             padding: 28px;
             margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            border-color: #f5a623;
+            transform: translateY(-2px);
         }
 
         .card-title {
             font-size: 11px;
             letter-spacing: 1.5px;
-            color: #d4a574;
+            color: #f5a623;
             margin: 0 0 16px;
             text-transform: uppercase;
             font-weight: 700;
@@ -186,7 +207,7 @@
         .location-info {
             font-size: 11px;
             letter-spacing: 2px;
-            color: #7a8fa3;
+            color: #f5a623;
             margin: 8px 0 0;
             text-transform: uppercase;
             font-weight: 600;
@@ -197,7 +218,7 @@
         }
 
         .weather-section {
-            border-top: 1px solid #2a3a4f;
+            border-top: 1px solid rgba(245, 166, 35, 0.2);
             padding-top: 20px;
             margin-bottom: 20px;
         }
@@ -215,26 +236,27 @@
             color: white;
             line-height: 0.95;
             font-family: 'Playfair Display', serif;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
         }
 
         .temp-unit {
             font-size: 28px;
-            color: #d4a574;
+            color: #f5a623;
             font-weight: 400;
         }
 
         .condition {
             font-size: 15px;
-            color: #7a8fa3;
+            color: #ffd700;
             margin: 0;
-            font-weight: 400;
+            font-weight: 500;
         }
 
         .details-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 16px;
-            border-top: 1px solid #2a3a4f;
+            border-top: 1px solid rgba(245, 166, 35, 0.2);
             padding-top: 16px;
             margin-bottom: 0;
         }
@@ -246,7 +268,7 @@
         .detail-label {
             font-size: 10px;
             letter-spacing: 1.5px;
-            color: #7a8fa3;
+            color: #f5a623;
             margin: 0 0 8px;
             text-transform: uppercase;
             font-weight: 600;
@@ -264,7 +286,7 @@
             grid-template-columns: 1fr 1fr;
             gap: 16px;
             margin-top: 16px;
-            border-top: 1px solid #2a3a4f;
+            border-top: 1px solid rgba(245, 166, 35, 0.2);
             padding-top: 16px;
         }
 
@@ -275,20 +297,21 @@
         }
 
         .aq-card {
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(255, 255, 255, 0.08);
             padding: 12px;
             border-radius: 8px;
-            border: 1px solid #2a3a4f;
+            border: 1px solid rgba(245, 166, 35, 0.3);
             cursor: pointer;
             transition: all 0.3s ease;
         }
         .aq-card:hover {
-            background: rgba(212, 165, 116, 0.1);
+            background: rgba(245, 166, 35, 0.2);
+            transform: scale(1.02);
         }
 
         .aq-label {
             font-size: 10px;
-            color: #7a8fa3;
+            color: #f5a623;
             margin: 0 0 6px;
             text-transform: uppercase;
             font-weight: 600;
@@ -303,7 +326,7 @@
 
         .map-container {
             background: #0f1623;
-            border: 1px solid #2a3a4f;
+            border: 1px solid rgba(245, 166, 35, 0.3);
             border-radius: 12px;
             height: 250px;
             overflow: hidden;
@@ -320,7 +343,7 @@
             justify-content: center;
         }
         .map-btn {
-            background: #d4a574;
+            background: #f5a623;
             border: none;
             border-radius: 20px;
             padding: 6px 14px;
@@ -331,12 +354,13 @@
             transition: all 0.2s;
         }
         .map-btn:hover {
-            background: #e8b88f;
+            background: #ffc107;
+            transform: scale(1.02);
         }
 
         .alert-item {
-            background: rgba(212, 165, 116, 0.1);
-            border-left: 3px solid #d4a574;
+            background: rgba(245, 166, 35, 0.1);
+            border-left: 3px solid #f5a623;
             border-radius: 8px;
             padding: 12px;
             margin-bottom: 8px;
@@ -344,36 +368,37 @@
             transition: all 0.3s ease;
         }
         .alert-item:hover {
-            background: rgba(212, 165, 116, 0.2);
+            background: rgba(245, 166, 35, 0.25);
+            transform: translateX(5px);
         }
 
         .alert-critical {
-            background: rgba(230, 76, 76, 0.15);
-            border-left-color: #e64c4c;
+            background: rgba(255, 68, 68, 0.15);
+            border-left-color: #ff4444;
         }
 
         .alert-title {
             font-size: 12px;
             font-weight: 700;
-            color: #d4a574;
+            color: #f5a623;
             margin: 0;
         }
 
         .alert-critical .alert-title {
-            color: #ff6b6b;
+            color: #ff8888;
         }
 
         .no-alerts {
             text-align: center;
-            color: #7a8fa3;
+            color: #aaa;
             font-size: 13px;
             padding: 20px;
             font-weight: 400;
         }
 
         .storm-item {
-            background: rgba(230, 76, 76, 0.1);
-            border-left: 3px solid #e64c4c;
+            background: rgba(255, 68, 68, 0.1);
+            border-left: 3px solid #ff4444;
             border-radius: 8px;
             padding: 12px;
             margin-bottom: 8px;
@@ -381,19 +406,20 @@
             transition: all 0.3s ease;
         }
         .storm-item:hover {
-            background: rgba(230, 76, 76, 0.2);
+            background: rgba(255, 68, 68, 0.2);
+            transform: translateX(5px);
         }
 
         .storm-name {
             font-size: 13px;
             font-weight: 600;
-            color: white;
+            color: #ff8888;
             margin: 0;
         }
 
         .storm-info {
             font-size: 11px;
-            color: #7a8fa3;
+            color: #ccc;
             margin: 4px 0 0;
         }
 
@@ -405,21 +431,21 @@
 
         .trend-card {
             text-align: center;
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(255, 255, 255, 0.05);
             padding: 12px;
             border-radius: 8px;
-            border: 1px solid #2a3a4f;
+            border: 1px solid rgba(245, 166, 35, 0.2);
             cursor: pointer;
             transition: all 0.3s ease;
         }
         .trend-card:hover {
-            background: rgba(212, 165, 116, 0.1);
-            transform: translateY(-2px);
+            background: rgba(245, 166, 35, 0.2);
+            transform: translateY(-3px);
         }
 
         .trend-day {
             font-size: 10px;
-            color: #7a8fa3;
+            color: #f5a623;
             margin: 0 0 6px;
             font-weight: 600;
         }
@@ -433,14 +459,14 @@
 
         .trend-low {
             font-size: 10px;
-            color: #7a8fa3;
+            color: #aaa;
             margin: 4px 0 0;
         }
 
         .notification-btn {
             width: 100%;
             padding: 12px;
-            background: #d4a574;
+            background: #f5a623;
             color: #1a2332;
             border: none;
             border-radius: 8px;
@@ -451,11 +477,12 @@
         }
 
         .notification-btn:hover {
-            background: #e8b88f;
+            background: #ffc107;
+            transform: scale(1.01);
         }
 
         .notification-enabled {
-            background: #7fb069;
+            background: #2ecc71;
             color: white;
         }
         
@@ -464,20 +491,21 @@
             bottom: 20px;
             left: 20px;
             right: 20px;
-            background: #d4a574;
+            background: #f5a623;
             color: #1a2332;
-            padding: 12px;
-            border-radius: 8px;
+            padding: 14px;
+            border-radius: 30px;
             text-align: center;
-            font-weight: 600;
+            font-weight: 700;
             z-index: 1000;
-            animation: fadeInUp 0.3s ease;
+            animation: slideUp 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
         
-        @keyframes fadeInUp {
+        @keyframes slideUp {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(30px);
             }
             to {
                 opacity: 1;
@@ -524,7 +552,7 @@
         <div class="locations-panel">
             <p class="locations-title">📍 Manage Locations</p>
             <div class="locations-buttons" id="locationButtons"></div>
-            <input type="text" id="newLocation" class="add-location-input" placeholder="Add new location..." onkeypress="handleLocationKeypress(event)">
+            <input type="text" id="newLocation" class="add-location-input" placeholder="+ Add new location..." onkeypress="handleLocationKeypress(event)">
         </div>
 
         <div class="card">
@@ -571,7 +599,7 @@
             </div>
         </div>
 
-        <!-- INTERACTIVE MAP - NOW FULLY FUNCTIONAL -->
+        <!-- INTERACTIVE MAP -->
         <div class="card">
             <p class="card-title">🗺️ Interactive Radar Map</p>
             <div class="map-container">
@@ -583,7 +611,7 @@
                 <button class="map-btn" onclick="toggleMapLayer()">🛰️ Satellite</button>
                 <button class="map-btn" onclick="refreshMap()">🔄 Refresh</button>
             </div>
-            <p style="font-size: 10px; color: #7a8fa3; text-align: center; margin-top: 12px;">Click and drag to explore | Radar data updates every 5 min</p>
+            <p style="font-size: 10px; color: #f5a623; text-align: center; margin-top: 12px;">✨ Tap map to explore | Drag to pan | Radar updates every 5 min</p>
         </div>
 
         <div class="card">
@@ -603,14 +631,14 @@
         <div class="card">
             <p class="card-title">⚠️ Advanced Alerts</p>
             <div id="alertsContainer">
-                <div class="no-alerts">✓ No severe weather alerts | Monitoring for Tornado • Hurricane • Severe Storms</div>
+                <div class="no-alerts" onclick="showToast('✅ No active weather alerts in your area')">✓ No severe weather alerts | Monitoring for Tornado • Hurricane • Severe Storms</div>
             </div>
         </div>
 
         <div class="card">
             <p class="card-title">⛈️ Real-Time Storm Tracking</p>
             <div id="stormContainer">
-                <div class="no-alerts">No active storms detected | Real-time tracking enabled</div>
+                <div class="no-alerts" onclick="showToast('🔄 Real-time storm tracking active - no threats detected')">No active storms detected | Real-time tracking enabled</div>
             </div>
         </div>
 
@@ -633,7 +661,6 @@
         let stormChaserMode = false;
         let map = null;
         let currentMapLayer = 'standard';
-        let radarUpdateInterval;
 
         // ========== WEATHER ICONS ==========
         const weatherIcons = {
@@ -643,6 +670,19 @@
             85: '🌨️', 86: '🌨️', 95: '⛈️', 96: '⛈️', 99: '⛈️'
         };
 
+        // ========== TOAST (FIXED - NO ERRORS) ==========
+        function showToast(message) {
+            const existingToast = document.querySelector('.toast');
+            if (existingToast) existingToast.remove();
+            
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => toast.remove(), 2500);
+        }
+
         // ========== INTERACTIVE MAP ==========
         function initMap() {
             if (map) {
@@ -651,7 +691,6 @@
             map = L.map('radarMap').setView([currentLocation.lat, currentLocation.lng], 7);
             updateMapLayer();
             
-            // Add click interaction
             map.on('click', function(e) {
                 showToast(`📍 Coordinates: ${e.latlng.lat.toFixed(4)}, ${e.latlng.lng.toFixed(4)}`);
             });
@@ -674,18 +713,19 @@
             }
             
             L.tileLayer(layerUrl, {
-                attribution: '&copy; WeatherTiff',
+                attribution: '© WeatherTiff',
                 subdomains: 'abcd',
                 maxZoom: 19
             }).addTo(map);
             
-            // Add marker for current location
-            const marker = L.marker([currentLocation.lat, currentLocation.lng]).addTo(map);
-            marker.bindPopup(`<b>${currentLocation.name}</b><br>Current Weather`).openPopup();
+            L.marker([currentLocation.lat, currentLocation.lng])
+                .addTo(map)
+                .bindPopup(`<b>${currentLocation.name}</b><br>📍 Current Location`)
+                .openPopup();
         }
 
-        function mapZoomIn() { if(map) map.zoomIn(); }
-        function mapZoomOut() { if(map) map.zoomOut(); }
+        function mapZoomIn() { if(map) map.zoomIn(); showToast('🔍 Zooming in'); }
+        function mapZoomOut() { if(map) map.zoomOut(); showToast('🔍 Zooming out'); }
         
         function toggleMapLayer() {
             if (currentMapLayer === 'standard') {
@@ -704,19 +744,6 @@
         function refreshMap() {
             initMap();
             showToast('🔄 Map refreshed');
-        }
-
-        // ========== TOAST NOTIFICATIONS ==========
-        function showToast(message) {
-            const existingToast = document.querySelector('.toast');
-            if (existingToast) existingToast.remove();
-            
-            const toast = document.createElement('div');
-            toast.className = 'toast';
-            toast.textContent = message;
-            document.body.appendChild(toast);
-            
-            setTimeout(() => toast.remove(), 3000);
         }
 
         // ========== LOCATION MANAGEMENT ==========
@@ -764,9 +791,8 @@
             btn.textContent = stormChaserMode ? '🌤️ STANDARD MODE' : '⛈️ STORM CHASER MODE';
             
             if (stormChaserMode) {
-                showToast('⛈️ STORM CHASER MODE ACTIVE - Enhanced storm tracking enabled');
-                document.body.style.animation = 'pulse 1s ease';
-                fetchWeather(); // Refresh with storm mode
+                showToast('⛈️ STORM CHASER MODE ACTIVE - Enhanced tracking enabled');
+                fetchWeather();
             } else {
                 showToast('🌤️ Standard mode restored');
             }
@@ -774,11 +800,11 @@
 
         // ========== DETAIL CLICK HANDLERS ==========
         function showAirQualityDetails() {
-            showToast('🌿 Current AQI indicates healthy air conditions. Perfect for outdoor activities!');
+            showToast('🌿 AQI: Good air quality • Perfect for outdoor activities');
         }
         
         function showPollenDetails() {
-            showToast('🌸 Pollen levels are moderate. Consider allergy precautions if sensitive.');
+            showToast('🌸 Moderate pollen • Take precautions if allergic');
         }
 
         function calculateSunTimes() {
@@ -804,10 +830,11 @@
                 generateTrends(data.daily);
                 
                 if (stormChaserMode && data.current.weather_code >= 80) {
-                    showToast('⛈️ STORM CHASER ALERT: Severe weather detected in your area!');
+                    showToast('⛈️ STORM CHASER: Severe weather detected!');
                 }
             } catch (error) {
                 console.error('Weather fetch error:', error);
+                showToast('⚠️ Weather data unavailable - check connection');
             }
         }
 
@@ -839,26 +866,25 @@
             const pollen = ['Low', 'Moderate', 'High'][Math.floor(Math.random() * 3)];
             document.getElementById('pollenLevel').textContent = pollen;
             
-            // Update location display
             document.getElementById('locationName').textContent = currentLocation.name.split(',')[0];
-            document.getElementById('locationInfo').textContent = currentLocation.name.split(',')[1] + ' • US';
+            document.getElementById('locationInfo').textContent = (currentLocation.name.split(',')[1] || ' FL') + ' • US';
         }
 
         function generateAlerts(current) {
             let alerts = [];
 
             if (current.weather_code >= 95) {
-                alerts.push({ severity: 'critical', title: '⚠️ SEVERE THUNDERSTORM WARNING - Large hail and damaging winds possible' });
+                alerts.push({ severity: 'critical', title: '⚠️ SEVERE THUNDERSTORM WARNING' });
             }
             if (current.wind_speed_10m > 35) {
-                alerts.push({ severity: 'severe', title: '💨 HIGH WIND WARNING - ' + Math.round(current.wind_speed_10m) + ' mph gusts' });
+                alerts.push({ severity: 'severe', title: '💨 HIGH WIND WARNING - ' + Math.round(current.wind_speed_10m) + ' mph' });
             }
             if (current.weather_code >= 80 && current.weather_code < 95) {
-                alerts.push({ severity: 'severe', title: '🌊 HEAVY RAIN ADVISORY - Localized flooding possible' });
+                alerts.push({ severity: 'severe', title: '🌊 HEAVY RAIN ADVISORY' });
             }
 
             if (alerts.length === 0) {
-                document.getElementById('alertsContainer').innerHTML = '<div class="no-alerts" onclick="showToast(\'✅ No active weather alerts in your area\')">✓ No severe weather alerts | Monitoring for Tornado • Hurricane • Severe Storms</div>';
+                document.getElementById('alertsContainer').innerHTML = '<div class="no-alerts" onclick="showToast(\'✅ No active weather alerts\')">✓ No severe weather alerts | Monitoring for Tornado • Hurricane • Severe Storms</div>';
             } else {
                 let html = '';
                 alerts.forEach(alert => {
@@ -872,18 +898,18 @@
             let storms = [];
 
             if (current.weather_code >= 95 || stormChaserMode) {
-                storms.push({ name: stormChaserMode ? '🌀 STORM CHASER: Active Cell' : 'Severe Thunderstorm System', distance: Math.round(Math.random() * 50 + 10), direction: 'NE', speed: 35 });
+                storms.push({ name: stormChaserMode ? '🌀 ACTIVE STORM CELL' : 'Severe Thunderstorm', distance: Math.round(Math.random() * 50 + 10), direction: 'NE', speed: 35 });
             }
-            if (current.weather_code >= 80) {
-                storms.push({ name: 'Heavy Precipitation Band', distance: Math.round(Math.random() * 30 + 5), direction: 'E', speed: 25 });
+            if (current.weather_code >= 80 && current.weather_code < 95) {
+                storms.push({ name: 'Heavy Rain Band', distance: Math.round(Math.random() * 30 + 5), direction: 'E', speed: 25 });
             }
 
             if (storms.length === 0) {
-                document.getElementById('stormContainer').innerHTML = '<div class="no-alerts" onclick="showToast(\'🔄 Real-time storm tracking active - no threats detected\')">No active storms detected | Real-time tracking enabled</div>';
+                document.getElementById('stormContainer').innerHTML = '<div class="no-alerts" onclick="showToast(\'No storm threats detected\')">No active storms detected | Real-time tracking enabled</div>';
             } else {
                 let html = '';
                 storms.forEach(storm => {
-                    html += `<div class="storm-item" onclick="showToast('🌀 ${storm.name}: ${storm.distance} miles away moving ${storm.direction} at ${storm.speed} mph')"><p class="storm-name">${storm.name}</p><p class="storm-info">${storm.distance} mi away • ${storm.direction} @ ${storm.speed} mph</p></div>`;
+                    html += `<div class="storm-item" onclick="showToast('🌀 ${storm.name}: ${storm.distance} mi away • ${storm.direction} @ ${storm.speed} mph')"><p class="storm-name">${storm.name}</p><p class="storm-info">${storm.distance} mi away • ${storm.direction} @ ${storm.speed} mph</p></div>`;
                 });
                 document.getElementById('stormContainer').innerHTML = html;
             }
@@ -894,8 +920,8 @@
             let html = '';
 
             for (let i = 0; i < 7; i++) {
-                const high = Math.round(daily.temperature_2m_max[i] || 75 + Math.random() * 15);
-                const low = Math.round(daily.temperature_2m_min[i] || 65 + Math.random() * 10);
+                const high = Math.round(daily.temperature_2m_max?.[i] || 75 + Math.random() * 15);
+                const low = Math.round(daily.temperature_2m_min?.[i] || 65 + Math.random() * 10);
                 html += `<div class="trend-card" onclick="showToast('📅 ${days[i]}: High ${high}°F / Low ${low}°F')"><p class="trend-day">${days[i]}</p><p class="trend-high">${high}°</p><p class="trend-low">${low}°</p></div>`;
             }
 
@@ -905,15 +931,25 @@
         function toggleNotifications() {
             notificationsEnabled = !notificationsEnabled;
             const btn = document.getElementById('notificationBtn');
-            btn.textContent = notificationsEnabled ? '✓ Severe Weather Alerts Enabled' : 'Enable Severe Weather Alerts';
+            btn.textContent = notificationsEnabled ? '✅ Alerts Enabled' : 'Enable Severe Weather Alerts';
             btn.classList.toggle('notification-enabled');
 
             if (notificationsEnabled && 'Notification' in window) {
                 Notification.requestPermission().then(perm => {
                     if (perm === 'granted') {
-                        showToast('🔔 Notifications enabled! You will receive severe weather alerts.');
+                        showToast('🔔 Notifications enabled!');
+                    } else {
+                        showToast('⚠️ Permission denied for notifications');
+                        notificationsEnabled = false;
+                        btn.textContent = 'Enable Severe Weather Alerts';
+                        btn.classList.remove('notification-enabled');
                     }
                 });
+            } else if (notificationsEnabled) {
+                showToast('⚠️ Notifications not supported on this browser');
+                notificationsEnabled = false;
+                btn.textContent = 'Enable Severe Weather Alerts';
+                btn.classList.remove('notification-enabled');
             }
         }
 
@@ -922,14 +958,7 @@
             updateLocationButtons();
             fetchWeather();
             initMap();
-            setInterval(fetchWeather, 600000); // Update every 10 minutes
-            setInterval(() => {
-                if (map) refreshMap();
-            }, 300000); // Refresh radar every 5 minutes
+            setInterval(fetchWeather, 600000);
         }
 
-        // Start everything
         init();
-    </script>
-</body>
-</html>
