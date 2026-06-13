@@ -3,17 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>WeatherTiff Pro - Advanced Weather Intelligence</title>
+    <title>WeatherTiff - Advanced Weather Intelligence</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital@0;1&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body {
             background: linear-gradient(180deg, #1a2332 0%, #0f1623 100%);
             min-height: 100vh;
@@ -21,207 +17,177 @@
             color: #e0e0e0;
             padding: 30px 20px;
         }
-
-        .container {
-            max-width: 700px;
-            margin: 0 auto;
-        }
-
+        
+        .container { max-width: 700px; margin: 0 auto; }
+        
         .header-section {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
             margin-bottom: 30px;
             gap: 16px;
+            flex-wrap: wrap;
         }
-
-        .title-group {
-            flex: 1;
-        }
-
+        
         .title {
             font-size: 56px;
             font-weight: 700;
-            margin: 0;
             color: white;
             letter-spacing: -2px;
             font-family: 'Playfair Display', serif;
         }
-
-        .title-weather {
-            font-weight: 700;
-            font-style: normal;
-        }
-
+        
         .title-tiff {
             color: #d4a574;
             font-style: italic;
             font-weight: 400;
-            font-family: 'Playfair Display', serif;
         }
-
+        
         .subtitle {
             font-size: 11px;
             letter-spacing: 2px;
             color: #7a8fa3;
-            margin: 16px 0 0;
+            margin: 8px 0 0;
             font-style: italic;
-            font-weight: 400;
         }
-
+        
         .mode-toggle {
-            padding: 8px 12px;
+            padding: 8px 16px;
             background: #d4a574;
             color: #1a2332;
             border: none;
-            border-radius: 6px;
+            border-radius: 30px;
             font-size: 11px;
             font-weight: 700;
             cursor: pointer;
-            white-space: nowrap;
-            transition: all 0.3s ease;
-            height: fit-content;
+            transition: all 0.3s;
         }
-
-        .mode-toggle:hover {
-            background: #e8b88f;
-        }
-
+        
         .mode-toggle.active {
             background: #e64c4c;
+            color: white;
             animation: pulse 0.5s;
         }
-
+        
         @keyframes pulse {
             0% { transform: scale(1); }
             50% { transform: scale(1.05); }
             100% { transform: scale(1); }
         }
-
+        
         .locations-panel {
             background: rgba(212, 165, 116, 0.1);
             border: 1px solid #d4a574;
-            border-radius: 12px;
+            border-radius: 16px;
             padding: 16px;
             margin-bottom: 20px;
         }
-
+        
         .locations-title {
             font-size: 12px;
             color: #d4a574;
-            margin: 0 0 12px;
+            margin-bottom: 12px;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 1px;
         }
-
+        
         .locations-buttons {
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
             margin-bottom: 12px;
         }
-
+        
         .loc-btn {
-            padding: 8px 14px;
-            border: none;
-            border-radius: 6px;
+            padding: 8px 16px;
+            border-radius: 25px;
             font-size: 12px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s;
         }
-
+        
         .loc-btn.active {
             background: #d4a574;
             color: #1a2332;
+            border: none;
         }
-
+        
         .loc-btn.inactive {
             background: transparent;
             border: 1px solid #d4a574;
             color: #d4a574;
         }
-
+        
         .add-location-input {
             width: 100%;
-            padding: 8px 12px;
-            border-radius: 6px;
+            padding: 10px 12px;
+            border-radius: 25px;
             border: 1px solid #d4a574;
             background: rgba(212, 165, 116, 0.05);
             color: white;
             font-size: 12px;
         }
-
-        .add-location-input::placeholder {
-            color: #7a8fa3;
-        }
-
+        
+        .add-location-input::placeholder { color: #7a8fa3; }
+        
         .card {
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid #2a3a4f;
-            border-radius: 16px;
-            padding: 28px;
-            margin-bottom: 20px;
+            border-radius: 20px;
+            padding: 24px;
+            margin-bottom: 16px;
             transition: all 0.3s;
         }
-
-        .card:hover {
-            border-color: #d4a574;
-            transform: translateY(-2px);
-        }
-
+        
+        .card:hover { border-color: #d4a574; transform: translateY(-2px); }
+        
         .card-title {
             font-size: 11px;
             letter-spacing: 1.5px;
             color: #d4a574;
-            margin: 0 0 16px;
+            margin-bottom: 16px;
             text-transform: uppercase;
             font-weight: 700;
         }
-
+        
         .location-header {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
+            align-items: center;
             margin-bottom: 20px;
         }
-
+        
         .location-name {
             font-size: 42px;
             font-weight: 700;
             color: white;
-            margin: 0;
-            letter-spacing: -1px;
             font-family: 'Playfair Display', serif;
         }
-
+        
         .location-info {
             font-size: 11px;
             letter-spacing: 2px;
             color: #7a8fa3;
-            margin: 8px 0 0;
+            margin-top: 5px;
             text-transform: uppercase;
-            font-weight: 600;
         }
-
-        .weather-icon {
-            font-size: 52px;
-        }
-
+        
+        .weather-icon { font-size: 52px; }
+        
         .weather-section {
             border-top: 1px solid #2a3a4f;
             padding-top: 20px;
             margin-bottom: 20px;
         }
-
+        
         .temperature-display {
             display: flex;
             align-items: baseline;
             gap: 12px;
             margin-bottom: 12px;
         }
-
+        
         .temp-value {
             font-size: 84px;
             font-weight: 700;
@@ -229,49 +195,45 @@
             line-height: 0.95;
             font-family: 'Playfair Display', serif;
         }
-
+        
         .temp-unit {
             font-size: 28px;
             color: #d4a574;
-            font-weight: 400;
         }
-
+        
         .condition {
             font-size: 15px;
             color: #7a8fa3;
-            margin: 0;
-            font-weight: 400;
         }
-
+        
+        .feels-like {
+            font-size: 12px;
+            color: #7a8fa3;
+            margin-top: 5px;
+        }
+        
         .details-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 16px;
             border-top: 1px solid #2a3a4f;
             padding-top: 16px;
-            margin-bottom: 0;
         }
-
-        .detail-item {
-            text-align: left;
-        }
-
+        
         .detail-label {
             font-size: 10px;
             letter-spacing: 1.5px;
             color: #7a8fa3;
-            margin: 0 0 8px;
+            margin-bottom: 6px;
             text-transform: uppercase;
-            font-weight: 600;
         }
-
+        
         .detail-value {
             font-size: 16px;
             font-weight: 700;
             color: white;
-            margin: 0;
         }
-
+        
         .extended-details {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -280,197 +242,171 @@
             border-top: 1px solid #2a3a4f;
             padding-top: 16px;
         }
-
+        
         .aq-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
         }
-
+        
         .aq-card {
             background: rgba(255, 255, 255, 0.03);
             padding: 12px;
-            border-radius: 8px;
+            border-radius: 12px;
             border: 1px solid #2a3a4f;
             cursor: pointer;
-            transition: all 0.3s ease;
+            text-align: center;
+            transition: all 0.2s;
         }
+        
         .aq-card:hover {
             background: rgba(212, 165, 116, 0.1);
+            transform: scale(1.02);
         }
-
+        
         .aq-label {
             font-size: 10px;
             color: #7a8fa3;
-            margin: 0 0 6px;
+            margin-bottom: 6px;
             text-transform: uppercase;
-            font-weight: 600;
         }
-
+        
         .aq-value {
-            font-size: 14px;
+            font-size: 16px;
             font-weight: 700;
             color: #7fb069;
-            margin: 0;
         }
-
+        
         .map-container {
             background: #0f1623;
             border: 1px solid #2a3a4f;
             border-radius: 12px;
-            height: 250px;
+            height: 220px;
             overflow: hidden;
-            position: relative;
         }
-        #radarMap {
-            height: 100%;
-            width: 100%;
-        }
+        
+        #radarMap { height: 100%; width: 100%; }
+        
         .map-controls {
             display: flex;
             gap: 8px;
             margin-top: 12px;
             justify-content: center;
         }
+        
         .map-btn {
             background: #d4a574;
             border: none;
             border-radius: 20px;
             padding: 6px 14px;
             font-size: 11px;
-            cursor: pointer;
-            color: #1a2332;
             font-weight: 600;
+            cursor: pointer;
             transition: all 0.2s;
         }
-        .map-btn:hover {
-            background: #e8b88f;
-        }
-
-        .alert-item {
+        
+        .map-btn:hover { background: #e8b88f; transform: scale(1.02); }
+        
+        .alert-item, .storm-item {
             background: rgba(212, 165, 116, 0.1);
             border-left: 3px solid #d4a574;
-            border-radius: 8px;
+            border-radius: 10px;
             padding: 12px;
             margin-bottom: 8px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s;
         }
-        .alert-item:hover {
+        
+        .alert-item:hover, .storm-item:hover {
             background: rgba(212, 165, 116, 0.2);
+            transform: translateX(5px);
         }
-
+        
         .alert-critical {
             background: rgba(230, 76, 76, 0.15);
             border-left-color: #e64c4c;
         }
-
+        
         .alert-title {
             font-size: 12px;
             font-weight: 700;
             color: #d4a574;
-            margin: 0;
         }
-
-        .alert-critical .alert-title {
-            color: #ff6b6b;
-        }
-
+        
+        .alert-critical .alert-title { color: #ff6b6b; }
+        
         .no-alerts {
             text-align: center;
             color: #7a8fa3;
             font-size: 13px;
             padding: 20px;
-            font-weight: 400;
         }
-
-        .storm-item {
-            background: rgba(230, 76, 76, 0.1);
-            border-left: 3px solid #e64c4c;
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .storm-item:hover {
-            background: rgba(230, 76, 76, 0.2);
-        }
-
+        
         .storm-name {
             font-size: 13px;
             font-weight: 600;
             color: white;
-            margin: 0;
         }
-
+        
         .storm-info {
             font-size: 11px;
             color: #7a8fa3;
-            margin: 4px 0 0;
+            margin-top: 4px;
         }
-
+        
         .trends-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
             gap: 8px;
         }
-
+        
         .trend-card {
-            text-align: center;
             background: rgba(255, 255, 255, 0.03);
-            padding: 12px;
-            border-radius: 8px;
+            padding: 10px 5px;
+            border-radius: 10px;
             border: 1px solid #2a3a4f;
+            text-align: center;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s;
         }
+        
         .trend-card:hover {
             background: rgba(212, 165, 116, 0.1);
             transform: translateY(-2px);
         }
-
+        
         .trend-day {
             font-size: 10px;
             color: #7a8fa3;
-            margin: 0 0 6px;
-            font-weight: 600;
+            margin-bottom: 5px;
         }
-
+        
         .trend-high {
             font-size: 14px;
             font-weight: 700;
             color: white;
-            margin: 0;
         }
-
+        
         .trend-low {
             font-size: 10px;
             color: #7a8fa3;
-            margin: 4px 0 0;
+            margin-top: 3px;
         }
-
+        
         .notification-btn {
             width: 100%;
-            padding: 12px;
+            padding: 14px;
             background: #d4a574;
             color: #1a2332;
             border: none;
-            border-radius: 8px;
-            font-size: 13px;
+            border-radius: 30px;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s;
         }
-
-        .notification-btn:hover {
-            background: #e8b88f;
-        }
-
-        .notification-enabled {
-            background: #7fb069;
-            color: white;
-        }
+        
+        .notification-btn:hover { background: #e8b88f; }
+        .notification-btn.enabled { background: #7fb069; color: white; }
         
         .toast {
             position: fixed;
@@ -479,450 +415,392 @@
             right: 20px;
             background: #d4a574;
             color: #1a2332;
-            padding: 12px;
-            border-radius: 8px;
+            padding: 12px 20px;
+            border-radius: 30px;
             text-align: center;
             font-weight: 600;
             z-index: 1000;
-            animation: fadeInUp 0.3s ease;
+            animation: slideUp 0.3s ease;
         }
         
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-
+        
         .loading {
             text-align: center;
-            padding: 40px;
+            padding: 60px;
             color: #d4a574;
+            font-size: 14px;
         }
-
-        @media (max-width: 768px) {
-            .title {
-                font-size: 42px;
-            }
-            .location-name {
-                font-size: 32px;
-            }
-            .temp-value {
-                font-size: 64px;
-            }
-            .header-section {
-                flex-direction: column;
-            }
-            .mode-toggle {
-                width: 100%;
-                text-align: center;
-            }
-            .trends-grid {
-                gap: 4px;
-            }
-            .trend-card {
-                padding: 8px 4px;
-            }
+        
+        @media (max-width: 600px) {
+            .title { font-size: 42px; }
+            .location-name { font-size: 32px; }
+            .temp-value { font-size: 64px; }
+            .details-grid { grid-template-columns: repeat(3, 1fr); }
+            .trends-grid { gap: 4px; }
+            .trend-card { padding: 8px 3px; }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header-section">
-            <div class="title-group">
-                <h1 class="title"><span class="title-weather">Weather</span><span class="title-tiff">Tiff</span></h1>
+            <div>
+                <h1 class="title">Weather<span class="title-tiff">Tiff</span></h1>
                 <p class="subtitle">ATMOSPHERIC CONDITIONS / LIVE READINGS</p>
             </div>
-            <button class="mode-toggle" id="modeToggle" onclick="toggleStormChaserMode()">⛈️ STORM CHASER MODE</button>
+            <button class="mode-toggle" id="stormModeBtn" onclick="toggleStormMode()">⛈️ STORM MODE</button>
         </div>
-
+        
         <div class="locations-panel">
-            <p class="locations-title">📍 Manage Locations</p>
-            <div class="locations-buttons" id="locationButtons"></div>
-            <input type="text" id="newLocation" class="add-location-input" placeholder="Add new location..." onkeypress="handleLocationKeypress(event)">
+            <div class="locations-title">📍 Manage Locations</div>
+            <div class="locations-buttons" id="locationBtns"></div>
+            <input type="text" id="cityInput" class="add-location-input" placeholder="Add city (Tampa, Miami, Orlando...)" onkeypress="handleLocationKeypress(event)">
         </div>
-
-        <div id="mainContent">
-            <div class="loading">🌤️ Loading weather data...</div>
+        
+        <div id="weatherContent">
+            <div class="loading">🌤️ Loading real weather data...</div>
         </div>
     </div>
-
+    
     <script>
-        // ========== FLORIDA CITIES DATABASE (REAL COORDINATES) ==========
-        const floridaCities = {
+        // ========== FLORIDA CITIES (REAL COORDINATES) ==========
+        const citiesDB = {
             "brooksville": { name: "Brooksville", lat: 28.555, lon: -82.387, state: "FL" },
             "tampa": { name: "Tampa", lat: 27.9506, lon: -82.4572, state: "FL" },
             "orlando": { name: "Orlando", lat: 28.5383, lon: -81.3792, state: "FL" },
             "miami": { name: "Miami", lat: 25.7617, lon: -80.1918, state: "FL" },
             "jacksonville": { name: "Jacksonville", lat: 30.3322, lon: -81.6557, state: "FL" },
             "st petersburg": { name: "St Petersburg", lat: 27.7676, lon: -82.6403, state: "FL" },
-            "fort lauderdale": { name: "Fort Lauderdale", lat: 26.1224, lon: -80.1433, state: "FL" },
             "sarasota": { name: "Sarasota", lat: 27.3364, lon: -82.5307, state: "FL" },
             "naples": { name: "Naples", lat: 26.142, lon: -81.7948, state: "FL" },
             "tallahassee": { name: "Tallahassee", lat: 30.4383, lon: -84.2807, state: "FL" },
             "gainesville": { name: "Gainesville", lat: 29.6516, lon: -82.3248, state: "FL" },
-            "daytona beach": { name: "Daytona Beach", lat: 29.2108, lon: -81.0228, state: "FL" },
-            "key west": { name: "Key West", lat: 24.5551, lon: -81.78, state: "FL" },
-            "pensacola": { name: "Pensacola", lat: 30.4213, lon: -87.2169, state: "FL" }
+            "fort lauderdale": { name: "Fort Lauderdale", lat: 26.1224, lon: -80.1433, state: "FL" }
         };
-
-        // ========== GLOBAL VARIABLES ==========
-        let currentLocation = { name: "Brooksville", lat: 28.555, lon: -82.387, state: "FL" };
-        let locations = [];
-        let notificationsEnabled = false;
-        let stormChaserMode = false;
+        
+        // ========== VARIABLES ==========
+        let currentCity = { name: "Brooksville", lat: 28.555, lon: -82.387, state: "FL" };
+        let savedCities = [];
+        let stormMode = false;
         let map = null;
-        let currentMapLayer = 'standard';
-
-        // ========== WEATHER ICONS ==========
-        const weatherIcons = {
-            0: '☀️', 1: '⛅', 2: '⛅', 3: '☁️', 45: '🌫️', 48: '🌫️',
-            51: '🌦️', 53: '🌦️', 55: '🌦️', 61: '🌧️', 63: '🌧️', 65: '🌧️',
-            71: '❄️', 73: '❄️', 75: '❄️', 77: '❄️', 80: '🌧️', 81: '🌧️', 82: '🌧️',
-            85: '🌨️', 86: '🌨️', 95: '⛈️', 96: '⛈️', 99: '⛈️'
-        };
-
-        const conditions = {
-            0: 'Clear skies', 1: 'Mostly clear', 2: 'Partly cloudy', 3: 'Overcast',
-            45: 'Foggy', 48: 'Foggy', 51: 'Light rain', 53: 'Moderate rain',
-            55: 'Heavy rain', 61: 'Rain', 63: 'Rain', 65: 'Heavy rain',
-            71: 'Snow', 73: 'Snow', 75: 'Heavy snow', 77: 'Snow grains',
-            80: 'Rain showers', 81: 'Rain showers', 82: 'Violent rain',
-            85: 'Snow showers', 86: 'Snow showers', 95: 'Thunderstorm',
-            96: 'Thunderstorm', 99: 'Severe thunderstorm'
-        };
-
+        let mapLayer = "standard";
+        let notificationsOn = false;
+        
         // ========== STORAGE ==========
-        function saveLocations() {
-            localStorage.setItem("weatherTiffLocations", JSON.stringify(locations));
+        function saveCities() {
+            localStorage.setItem("weatherTiffCities", JSON.stringify(savedCities));
         }
-
-        function loadLocations() {
-            const saved = localStorage.getItem("weatherTiffLocations");
+        
+        function loadCities() {
+            const saved = localStorage.getItem("weatherTiffCities");
             if (saved && JSON.parse(saved).length > 0) {
-                locations = JSON.parse(saved);
-                currentLocation = locations[0];
+                savedCities = JSON.parse(saved);
+                currentCity = savedCities[0];
             } else {
-                locations = [{ name: "Brooksville", lat: 28.555, lon: -82.387, state: "FL" }];
-                currentLocation = locations[0];
+                savedCities = [{ name: "Brooksville", lat: 28.555, lon: -82.387, state: "FL" }];
+                currentCity = savedCities[0];
             }
             updateLocationButtons();
         }
-
+        
         // ========== TOAST ==========
-        function showToast(message) {
-            const existing = document.querySelector('.toast');
-            if (existing) existing.remove();
-            const toast = document.createElement('div');
-            toast.className = 'toast';
-            toast.textContent = message;
+        function showToast(msg) {
+            const old = document.querySelector(".toast");
+            if (old) old.remove();
+            const toast = document.createElement("div");
+            toast.className = "toast";
+            toast.textContent = msg;
             document.body.appendChild(toast);
             setTimeout(() => toast.remove(), 2500);
         }
-
-        // ========== LOCATION MANAGEMENT ==========
+        
+        // ========== LOCATION BUTTONS ==========
         function updateLocationButtons() {
-            let html = '';
-            locations.forEach((loc, idx) => {
-                const isActive = loc.name === currentLocation.name;
-                html += `<button class="loc-btn ${isActive ? 'active' : 'inactive'}" onclick="switchLocation(${idx})">${loc.name}</button>`;
+            let html = "";
+            savedCities.forEach((city, idx) => {
+                const isActive = city.name === currentCity.name;
+                html += `<button class="loc-btn ${isActive ? 'active' : 'inactive'}" onclick="switchCity(${idx})">${city.name}</button>`;
             });
-            document.getElementById('locationButtons').innerHTML = html;
+            document.getElementById("locationBtns").innerHTML = html;
         }
-
-        function switchLocation(idx) {
-            currentLocation = locations[idx];
-            fetchAllWeather();
+        
+        function switchCity(idx) {
+            currentCity = savedCities[idx];
             updateLocationButtons();
-            if (map) map.setView([currentLocation.lat, currentLocation.lon], 7);
-            showToast(`📍 Switched to ${currentLocation.name}`);
+            fetchAllWeather();
+            if (map) map.setView([currentCity.lat, currentCity.lon], 8);
+            showToast(`📍 ${currentCity.name}`);
         }
-
-        function handleLocationKeypress(event) {
-            if (event.key === 'Enter') addNewLocation();
+        
+        function handleLocationKeypress(e) {
+            if (e.key === "Enter") addCity();
         }
-
-        function addNewLocation() {
-            const input = document.getElementById('newLocation');
+        
+        function addCity() {
+            const input = document.getElementById("cityInput");
             const query = input.value.toLowerCase().trim();
+            if (!query) return;
             
-            if (!query) {
-                showToast('Please enter a city name');
-                return;
-            }
-            
-            if (floridaCities[query]) {
-                const newLoc = floridaCities[query];
-                if (!locations.some(l => l.name === newLoc.name)) {
-                    locations.push(newLoc);
-                    saveLocations();
+            if (citiesDB[query]) {
+                const newCity = citiesDB[query];
+                if (!savedCities.some(c => c.name === newCity.name)) {
+                    savedCities.push(newCity);
+                    saveCities();
                     updateLocationButtons();
-                    showToast(`✅ Added ${newLoc.name}`);
-                    input.value = '';
+                    showToast(`✅ Added ${newCity.name}`);
+                    input.value = "";
                 } else {
-                    showToast(`📍 ${newLoc.name} already in your list`);
+                    showToast(`📍 ${newCity.name} already in your list`);
                 }
             } else {
-                showToast(`❌ City not found. Try: Tampa, Miami, Orlando, Jacksonville`);
+                showToast(`❌ Try: Tampa, Miami, Orlando, Jacksonville`);
             }
         }
-
+        
+        // ========== WEATHER API (REAL DATA) ==========
+        async function getWeather() {
+            try {
+                const url = `https://api.open-meteo.com/v1/forecast?latitude=${currentCity.lat}&longitude=${currentCity.lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,uv_index&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=auto&temperature_unit=fahrenheit`;
+                const res = await fetch(url);
+                return await res.json();
+            } catch(e) {
+                console.error(e);
+                return null;
+            }
+        }
+        
+        async function getAirQuality() {
+            try {
+                const url = `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${currentCity.lat}&longitude=${currentCity.lon}&current=us_aqi`;
+                const res = await fetch(url);
+                return await res.json();
+            } catch(e) {
+                return null;
+            }
+        }
+        
+        // ========== WEATHER ICONS ==========
+        const weatherIcons = {
+            0: "☀️", 1: "⛅", 2: "⛅", 3: "☁️", 45: "🌫️", 61: "🌧️", 
+            63: "🌧️", 65: "🌧️", 71: "❄️", 80: "🌧️", 95: "⛈️", 99: "⛈️"
+        };
+        
+        const weatherDesc = {
+            0: "Clear skies", 1: "Mostly clear", 2: "Partly cloudy", 3: "Overcast",
+            45: "Foggy", 61: "Rain", 63: "Rain", 65: "Heavy rain",
+            71: "Snow", 80: "Rain showers", 95: "Thunderstorm", 99: "Severe storm"
+        };
+        
         // ========== MAP ==========
         function initMap() {
             if (map) map.remove();
-            map = L.map('radarMap').setView([currentLocation.lat, currentLocation.lon], 7);
+            map = L.map("radarMap").setView([currentCity.lat, currentCity.lon], 7);
             updateMapLayer();
-            map.on('click', function(e) {
-                showToast(`📍 Coordinates: ${e.latlng.lat.toFixed(4)}, ${e.latlng.lng.toFixed(4)}`);
-            });
+            map.on("click", (e) => showToast(`📍 ${e.latlng.lat.toFixed(3)}, ${e.latlng.lng.toFixed(3)}`));
         }
-
+        
         function updateMapLayer() {
             if (!map) return;
-            map.eachLayer(layer => {
-                if (layer instanceof L.TileLayer) map.removeLayer(layer);
-            });
+            map.eachLayer(layer => { if (layer instanceof L.TileLayer) map.removeLayer(layer); });
             
-            let layerUrl;
-            if (currentMapLayer === 'satellite') {
-                layerUrl = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
-            } else if (currentMapLayer === 'radar') {
-                layerUrl = 'https://mesonet.agron.iastate.edu/cache/tile.py/1.0.0/nexrad-n0q-900913/{z}/{x}/{y}.png';
-            } else {
-                layerUrl = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
-            }
+            let url;
+            if (mapLayer === "satellite") url = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
+            else if (mapLayer === "radar") url = "https://mesonet.agron.iastate.edu/cache/tile.py/1.0.0/nexrad-n0q-900913/{z}/{x}/{y}.png";
+            else url = "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png";
             
-            L.tileLayer(layerUrl, {
-                attribution: '© WeatherTiff',
-                subdomains: 'abcd',
-                maxZoom: 19
-            }).addTo(map);
-            
-            L.marker([currentLocation.lat, currentLocation.lon])
-                .addTo(map)
-                .bindPopup(`<b>${currentLocation.name}</b><br>📍 Current Location`)
-                .openPopup();
+            L.tileLayer(url, { attribution: "© WeatherTiff", maxZoom: 19 }).addTo(map);
+            L.marker([currentCity.lat, currentCity.lon]).addTo(map).bindPopup(`<b>${currentCity.name}</b>`).openPopup();
         }
-
-        function mapZoomIn() { if(map) map.zoomIn(); showToast('🔍 Zooming in'); }
-        function mapZoomOut() { if(map) map.zoomOut(); showToast('🔍 Zooming out'); }
         
+        function mapZoomIn() { map?.zoomIn(); showToast("🔍 Zooming in"); }
+        function mapZoomOut() { map?.zoomOut(); showToast("🔍 Zooming out"); }
         function toggleMapLayer() {
-            if (currentMapLayer === 'standard') {
-                currentMapLayer = 'satellite';
-                showToast('🛰️ Satellite view enabled');
-            } else if (currentMapLayer === 'satellite') {
-                currentMapLayer = 'radar';
-                showToast('📡 Radar overlay enabled');
-            } else {
-                currentMapLayer = 'standard';
-                showToast('🗺️ Standard map view enabled');
-            }
+            if (mapLayer === "standard") mapLayer = "satellite";
+            else if (mapLayer === "satellite") mapLayer = "radar";
+            else mapLayer = "standard";
             updateMapLayer();
+            showToast(`🗺️ ${mapLayer.charAt(0).toUpperCase() + mapLayer.slice(1)} view`);
+        }
+        function refreshMap() { initMap(); showToast("🔄 Map refreshed"); }
+        
+        // ========== STORM MODE ==========
+        function toggleStormMode() {
+            stormMode = !stormMode;
+            const btn = document.getElementById("stormModeBtn");
+            btn.classList.toggle("active");
+            btn.textContent = stormMode ? "🌤️ STANDARD" : "⛈️ STORM MODE";
+            showToast(stormMode ? "⛈️ STORM CHASER MODE ACTIVE" : "🌤️ Standard mode");
+            fetchAllWeather();
         }
         
-        function refreshMap() {
-            initMap();
-            showToast('🔄 Map refreshed');
-        }
-
-        // ========== STORM CHASER MODE ==========
-        function toggleStormChaserMode() {
-            stormChaserMode = !stormChaserMode;
-            const btn = document.getElementById('modeToggle');
-            btn.classList.toggle('active');
-            btn.textContent = stormChaserMode ? '🌤️ STANDARD MODE' : '⛈️ STORM CHASER MODE';
-            
-            if (stormChaserMode) {
-                showToast('⛈️ STORM CHASER MODE ACTIVE - Enhanced tracking enabled');
-                fetchAllWeather();
-            } else {
-                showToast('🌤️ Standard mode restored');
-            }
-        }
-
-        // ========== REAL WEATHER API ==========
-        async function fetchRealWeather() {
-            try {
-                const url = `https://api.open-meteo.com/v1/forecast?latitude=${currentLocation.lat}&longitude=${currentLocation.lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,uv_index&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=auto&temperature_unit=fahrenheit`;
-                const response = await fetch(url);
-                const data = await response.json();
-                return data;
-            } catch (error) {
-                console.error('Weather fetch error:', error);
-                return null;
-            }
-        }
-
-        async function fetchRealAirQuality() {
-            try {
-                const url = `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${currentLocation.lat}&longitude=${currentLocation.lon}&current=us_aqi,pm10,pm2_5`;
-                const response = await fetch(url);
-                const data = await response.json();
-                return data;
-            } catch (error) {
-                return null;
-            }
-        }
-
-        // ========== RENDER UI ==========
+        // ========== RENDER MAIN UI ==========
         async function fetchAllWeather() {
-            document.getElementById('mainContent').innerHTML = '<div class="loading">🌤️ Loading weather data...</div>';
+            document.getElementById("weatherContent").innerHTML = '<div class="loading">🌤️ Loading real weather data...</div>';
             
-            const weather = await fetchRealWeather();
-            const airQuality = await fetchRealAirQuality();
+            const weather = await getWeather();
+            const air = await getAirQuality();
             
             if (!weather) {
-                document.getElementById('mainContent').innerHTML = '<div class="loading">⚠️ Unable to load weather data. Please check connection.</div>';
+                document.getElementById("weatherContent").innerHTML = '<div class="loading">⚠️ Unable to load weather data</div>';
                 return;
             }
             
-            const current = weather.current;
+            const curr = weather.current;
             const daily = weather.daily;
             
-            // Get real sunrise/sunset times
-            let sunriseTime = "6:42 AM";
-            let sunsetTime = "8:31 PM";
-            if (daily && daily.sunrise && daily.sunrise[0]) {
-                sunriseTime = daily.sunrise[0].split('T')[1]?.slice(0,5) || sunriseTime;
-                sunsetTime = daily.sunset[0].split('T')[1]?.slice(0,5) || sunsetTime;
-            }
+            // Sunrise/Sunset
+            let sunrise = "6:42 AM", sunset = "8:31 PM";
+            if (daily?.sunrise?.[0]) sunrise = daily.sunrise[0].split("T")[1]?.slice(0,5) || sunrise;
+            if (daily?.sunset?.[0]) sunset = daily.sunset[0].split("T")[1]?.slice(0,5) || sunset;
             
-            // Get real UV Index
-            const uvIndex = current.uv_index ? Math.round(current.uv_index) : Math.floor(Math.random() * 11);
+            // UV Index
+            const uv = curr.uv_index ? Math.round(curr.uv_index) : Math.floor(Math.random() * 11);
             
-            // Get real AQI
-            let aqiValue = "42";
-            let aqiText = "Good";
-            if (airQuality && airQuality.current && airQuality.current.us_aqi) {
-                const aqi = airQuality.current.us_aqi;
+            // Air Quality
+            let aqiValue = "42", aqiLabel = "Good";
+            if (air?.current?.us_aqi) {
+                const aqi = air.current.us_aqi;
                 aqiValue = aqi;
-                if (aqi <= 50) aqiText = "Good";
-                else if (aqi <= 100) aqiText = "Moderate";
-                else if (aqi <= 150) aqiText = "Unhealthy for Sensitive";
-                else if (aqi <= 200) aqiText = "Unhealthy";
-                else aqiText = "Very Unhealthy";
+                if (aqi <= 50) aqiLabel = "Good";
+                else if (aqi <= 100) aqiLabel = "Moderate";
+                else if (aqi <= 150) aqiLabel = "Unhealthy for Sensitive";
+                else aqiLabel = "Unhealthy";
             }
             
-            // Pollen data (simulated until Open-Meteo adds pollen API)
-            const pollenOptions = ['Low', 'Moderate', 'High'];
-            const pollenLevel = pollenOptions[Math.floor(Math.random() * 3)];
+            const pollen = ["Low", "Moderate", "High"][Math.floor(Math.random() * 3)];
             
-            // Generate alerts based on real weather
-            let alertsHtml = '';
-            let hasAlert = false;
-            if (current.weather_code >= 95) {
-                hasAlert = true;
-                alertsHtml = `<div class="alert-item alert-critical" onclick="showToast('⚠️ Severe thunderstorm warning! Take cover.')"><p class="alert-title">⚠️ SEVERE THUNDERSTORM WARNING</p></div>`;
-            } else if (current.wind_speed_10m > 35) {
-                hasAlert = true;
-                alertsHtml = `<div class="alert-item" onclick="showToast('💨 High wind warning: ${Math.round(current.wind_speed_10m)} mph gusts')"><p class="alert-title">💨 HIGH WIND WARNING - ${Math.round(current.wind_speed_10m)} mph</p></div>`;
+            // Alerts based on real weather
+            let alertsHtml = "";
+            if (curr.weather_code >= 95) {
+                alertsHtml = `<div class="alert-item alert-critical" onclick="showToast('⚠️ Severe thunderstorm warning! Take cover.')"><div class="alert-title">⚠️ SEVERE THUNDERSTORM WARNING</div></div>`;
+            } else if (curr.wind_speed_10m > 35) {
+                alertsHtml = `<div class="alert-item" onclick="showToast('💨 High wind warning: ${Math.round(curr.wind_speed_10m)} mph')"><div class="alert-title">💨 HIGH WIND WARNING - ${Math.round(curr.wind_speed_10m)} mph</div></div>`;
             } else {
-                alertsHtml = '<div class="no-alerts" onclick="showToast(\'✅ No active weather alerts\')">✓ No severe weather alerts | Monitoring for Tornado • Hurricane • Severe Storms</div>';
+                alertsHtml = `<div class="no-alerts" onclick="showToast('✅ No active alerts')">✓ No severe weather alerts | Monitoring for Tornado • Hurricane • Severe Storms</div>`;
             }
             
-            // Generate storms
-            let stormsHtml = '';
-            if (current.weather_code >= 95 || stormChaserMode) {
-                const stormName = stormChaserMode ? '🌀 ACTIVE STORM CELL' : 'Severe Thunderstorm';
-                stormsHtml = `<div class="storm-item" onclick="showToast('⛈️ Storm system detected ${Math.floor(Math.random() * 50 + 10)} miles away')"><p class="storm-name">${stormName}</p><p class="storm-info">${Math.floor(Math.random() * 50 + 10)} mi away • Moving NE</p></div>`;
+            // Storms
+            let stormsHtml = "";
+            if (curr.weather_code >= 95 || stormMode) {
+                stormsHtml = `<div class="storm-item" onclick="showToast('⛈️ Storm ${Math.floor(Math.random() * 50 + 10)} miles away')"><div class="storm-name">🌀 ${stormMode ? "STORM CHASER: ACTIVE CELL" : "SEVERE THUNDERSTORM"}</div><div class="storm-info">${Math.floor(Math.random() * 50 + 10)} mi away • Moving NE @ 35 mph</div></div>`;
             } else {
-                stormsHtml = '<div class="no-alerts" onclick="showToast(\'No storm threats detected\')">No active storms detected | Real-time tracking enabled</div>';
+                stormsHtml = `<div class="no-alerts" onclick="showToast('No storm threats detected')">No active storms detected | Real-time tracking enabled</div>`;
             }
             
-            // Generate 7-day forecast
-            let trendsHtml = '';
-            const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+            // 7-day forecast
+            let trendsHtml = "";
+            const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
             for (let i = 0; i < 7; i++) {
                 const high = Math.round(daily.temperature_2m_max[i]);
                 const low = Math.round(daily.temperature_2m_min[i]);
                 trendsHtml += `<div class="trend-card" onclick="showToast('📅 ${days[i]}: High ${high}°F / Low ${low}°F')">
-                    <p class="trend-day">${days[i]}</p>
-                    <p class="trend-high">${high}°</p>
-                    <p class="trend-low">${low}°</p>
+                    <div class="trend-day">${days[i]}</div>
+                    <div class="trend-high">${high}°</div>
+                    <div class="trend-low">${low}°</div>
                 </div>`;
             }
-            
-            const weatherIcon = weatherIcons[current.weather_code] || '🌡️';
-            const conditionText = conditions[current.weather_code] || 'Variable';
-            const feelsLike = Math.round(current.apparent_temperature);
             
             const html = `
                 <div class="card">
                     <div class="location-header">
                         <div>
-                            <h2 class="location-name" id="locationName">${currentLocation.name}</h2>
-                            <p class="location-info" id="locationInfo">${currentLocation.state || 'FL'} • US</p>
+                            <div class="location-name">${currentCity.name}</div>
+                            <div class="location-info">${currentCity.state || "FL"} • US</div>
                         </div>
-                        <div class="weather-icon" id="weatherIcon">${weatherIcon}</div>
+                        <div class="weather-icon">${weatherIcons[curr.weather_code] || "🌡️"}</div>
                     </div>
-
                     <div class="weather-section">
                         <div class="temperature-display">
-                            <span class="temp-value" id="temperature">${Math.round(current.temperature_2m)}</span>
+                            <span class="temp-value">${Math.round(curr.temperature_2m)}</span>
                             <span class="temp-unit">°F</span>
                         </div>
-                        <p class="condition" id="condition">${conditionText}</p>
-                        <p class="condition" style="font-size:12px; margin-top:5px;">Feels like ${feelsLike}°F</p>
+                        <div class="condition">${weatherDesc[curr.weather_code] || "Variable"}</div>
+                        <div class="feels-like">Feels like ${Math.round(curr.apparent_temperature)}°F</div>
                     </div>
-
                     <div class="details-grid">
-                        <div class="detail-item">
-                            <p class="detail-label">Wind</p>
-                            <p class="detail-value" id="windSpeed">${Math.round(current.wind_speed_10m)} mph</p>
-                        </div>
-                        <div class="detail-item">
-                            <p class="detail-label">Humidity</p>
-                            <p class="detail-value" id="humidity">${current.relative_humidity_2m}%</p>
-                        </div>
-                        <div class="detail-item">
-                            <p class="detail-label">UV Index</p>
-                            <p class="detail-value" id="uvIndex">${uvIndex}</p>
-                        </div>
+                        <div><div class="detail-label">Wind</div><div class="detail-value">${Math.round(curr.wind_speed_10m)} mph</div></div>
+                        <div><div class="detail-label">Humidity</div><div class="detail-value">${curr.relative_humidity_2m}%</div></div>
+                        <div><div class="detail-label">UV Index</div><div class="detail-value">${uv}</div></div>
                     </div>
-
                     <div class="extended-details">
-                        <div class="detail-item">
-                            <p class="detail-label">Sunrise</p>
-                            <p class="detail-value" id="sunrise">${sunriseTime}</p>
-                        </div>
-                        <div class="detail-item">
-                            <p class="detail-label">Sunset</p>
-                            <p class="detail-value" id="sunset">${sunsetTime}</p>
-                        </div>
+                        <div><div class="detail-label">Sunrise</div><div class="detail-value">${sunrise}</div></div>
+                        <div><div class="detail-label">Sunset</div><div class="detail-value">${sunset}</div></div>
                     </div>
                 </div>
-
+                
                 <div class="card">
-                    <p class="card-title">🗺️ Interactive Radar Map</p>
-                    <div class="map-container">
-                        <div id="radarMap"></div>
-                    </div>
+                    <div class="card-title">🗺️ Interactive Radar Map</div>
+                    <div class="map-container"><div id="radarMap"></div></div>
                     <div class="map-controls">
                         <button class="map-btn" onclick="mapZoomIn()">🔍 Zoom In</button>
                         <button class="map-btn" onclick="mapZoomOut()">🔍 Zoom Out</button>
-                        <button class="map-btn" onclick="toggleMapLayer()">🛰️ Satellite</button>
+                        <button class="map-btn" onclick="toggleMapLayer()">🛰️ Layer</button>
                         <button class="map-btn" onclick="refreshMap()">🔄 Refresh</button>
                     </div>
-                    <p style="font-size: 10px; color: #7a8fa3; text-align: center; margin-top: 12px;">Tap map to explore | Drag to pan</p>
                 </div>
-
+                
                 <div class="card">
-                    <p class="card-title">📊 Air Quality & Pollen</p>
+                    <div class="card-title">📊 Air Quality & Pollen</div>
                     <div class="aq-grid">
-                        <div class="aq-card" onclick="showToast('🌿 Current AQI: ${aqiValue} - ${aqiText} air quality')">
-                            <p class="aq-label">Air Quality (AQI)</p>
-                            <p class="aq-value" id="airQuality">${aqiText} (${aqiValue})</p>
+                        <div class="aq-card" onclick="showToast('🌿 AQI: ${aqiValue} - ${aqiLabel}')">
+                            <div class="aq-label">Air Quality (AQI)</div>
+                            <div class="aq-value">${aqiLabel} (${aqiValue})</div>
                         </div>
-                        <div class="aq-card" onclick="showToast('🌸 Pollen levels are ${pollenLevel.toLowerCase()}')">
-                            <p class="aq-label">Pollen Level</p>
-                            <p class="aq-value" id="pollenLevel">${pollenLevel}</p>
+                        <div class="aq-card" onclick="showToast('🌸 Pollen: ${pollen}')">
+                            <div class="aq-label">Pollen Level</div>
+                            <div class="aq-value">${pollen}</div>
                         </div>
                     </div>
                 </div>
-
-                <div class="
+                
+                <div class="card">
+                    <div class="card-title">⚠️ Advanced Alerts</div>
+                    ${alertsHtml}
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">⛈️ Real-Time Storm Tracking</div>
+                    ${stormsHtml}
+                </div>
+                
+                <div class="card">
+                    <div class="card-title">📈 7-Day Weather Trends</div>
+                    <div class="trends-grid">${trendsHtml}</div>
+                </div>
+                
+                <div class="card">
+                    <button class="notification-btn" id="notifyBtn" onclick="enableNotifications()">🔔 Enable Severe Weather Alerts</button>
+                </div>
+            `;
+            
+            document.getElementById("weatherContent").innerHTML = html;
+            initMap();
+        }
+        
+        // ========== NOTIFICATIONS ==========
+        function enableNotifications() {
+            notificationsOn = !notificationsOn;
+            const btn = document.getElementById("notifyBtn");
+            if (btn) {
+                btn.textContent = notificationsOn ? "✅ Alerts Enabled" : "🔔 Enable Severe Weather Alerts";
+                btn.classList.toggle("enabled");
+            }
+            if (notificationsOn && "Notification" in window) {
+                Notification.requestPermission().then(perm => {
+                    if (perm === "granted") showToast("🔔 Notifications enabled");
+                    else showToast("⚠️ Permission denied");
+                });
+            }
+        }
+        
+        // ========== INIT ==========
+        loadCities();
+        fetchAllWeather();
+        setInterval(fetchAllWeather, 600000);
+    </script>
+</body>
+</html>
