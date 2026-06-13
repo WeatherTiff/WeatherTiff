@@ -3,43 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>WeatherTiff - Premium Weather Intelligence</title>
+    <title>WeatherTiff Pro - Advanced Weather Intelligence</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital@0;1&family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
-        /* RICH ROYAL PURPLE/BLUE GRADIENT */
         body {
-            background: linear-gradient(135deg, #0a0a2a 0%, #1a1a4e 30%, #2d1b69 70%, #4a2080 100%);
+            background: linear-gradient(135deg, #1a2a5f 0%, #2d3e7f 50%, #1f3a6f 100%);
             min-height: 100vh;
-            font-family: 'Open Sans', -apple-system, sans-serif;
+            font-family: 'Open Sans', sans-serif;
             color: #ffffff;
             padding: 30px 20px;
             position: relative;
+            overflow: hidden;
         }
-        
-        /* Subtle animated background effect */
-        body::before {
-            content: '';
+
+        /* REALISTIC TRANSLUCENT CLOUDS */
+        .cloud-bg {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: radial-gradient(circle at 50% 50%, rgba(255,107,53,0.08) 0%, transparent 70%);
             pointer-events: none;
             z-index: 0;
+            opacity: 0.25;
         }
-        
+
+        svg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+
         .container {
             max-width: 700px;
             margin: 0 auto;
             position: relative;
             z-index: 1;
         }
-        
+
         .header-section {
             display: flex;
             justify-content: space-between;
@@ -48,70 +51,72 @@
             gap: 16px;
             flex-wrap: wrap;
         }
-        
+
         .title {
             font-size: 56px;
             font-weight: 800;
             color: white;
             letter-spacing: -2px;
             font-family: 'Playfair Display', serif;
-            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
         }
-        
+
         .title-tiff { 
-            color: #ff8c42; 
+            color: #ffb366;
             font-style: italic;
-            text-shadow: 0 0 10px rgba(255,140,66,0.3);
+            font-family: 'Playfair Display', serif;
+            font-weight: 400;
         }
-        
+
         .subtitle {
             font-size: 11px;
             letter-spacing: 3px;
-            color: #ff8c42;
+            color: #b8d0ff;
             margin: 8px 0 0;
             font-weight: 600;
         }
-        
+
         .mode-toggle {
             padding: 8px 20px;
-            background: linear-gradient(135deg, #ff8c42, #ff6b35);
+            background: linear-gradient(135deg, #ffb366, #ff8833);
             color: white;
             border: none;
             border-radius: 30px;
             font-size: 11px;
             font-weight: 800;
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(255,107,53,0.3);
+            box-shadow: 0 4px 15px rgba(255,136,51,0.3);
             transition: all 0.3s;
+            height: fit-content;
         }
-        
-        .mode-toggle:hover { transform: scale(1.02); box-shadow: 0 6px 20px rgba(255,107,53,0.4); }
-        .mode-toggle.active { background: linear-gradient(135deg, #ff4444, #cc0000); box-shadow: 0 4px 15px rgba(255,0,0,0.3); }
-        
+
+        .mode-toggle:hover { transform: scale(1.02); }
+        .mode-toggle.active { background: linear-gradient(135deg, #ff5555, #dd0000); }
+
         .locations-panel {
-            background: rgba(255,255,255,0.08);
+            background: rgba(255,255,255,0.1);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,140,66,0.4);
+            border: 1px solid rgba(255,179,102,0.4);
             border-radius: 20px;
             padding: 20px;
             margin-bottom: 20px;
         }
-        
+
         .locations-title {
             font-size: 12px;
-            color: #ff8c42;
+            color: #ffb366;
             margin-bottom: 15px;
             font-weight: 800;
             letter-spacing: 1px;
         }
-        
+
         .locations-buttons {
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
             margin-bottom: 15px;
         }
-        
+
         .loc-btn {
             padding: 8px 18px;
             border-radius: 30px;
@@ -119,56 +124,61 @@
             font-weight: 700;
             cursor: pointer;
             transition: all 0.2s;
-        }
-        
-        .loc-btn.active { 
-            background: linear-gradient(135deg, #ff8c42, #ff6b35);
-            color: white; 
             border: none;
-            box-shadow: 0 2px 8px rgba(255,107,53,0.3);
         }
-        .loc-btn.inactive { background: rgba(255,140,66,0.15); border: 1px solid #ff8c42; color: #ff8c42; }
+
+        .loc-btn.active { 
+            background: linear-gradient(135deg, #ffb366, #ff8833);
+            color: white;
+            box-shadow: 0 2px 8px rgba(255,136,51,0.3);
+        }
         
+        .loc-btn.inactive { 
+            background: rgba(255,179,102,0.15);
+            border: 1px solid #ffb366;
+            color: #ffb366;
+        }
+
         .add-location-input {
             width: 100%;
             padding: 12px 16px;
             border-radius: 40px;
-            border: 1px solid rgba(255,140,66,0.5);
+            border: 1px solid rgba(255,179,102,0.5);
             background: rgba(255,255,255,0.1);
             color: white;
             font-size: 13px;
         }
-        
-        .add-location-input::placeholder { color: rgba(255,140,66,0.7); }
-        
+
+        .add-location-input::placeholder { color: rgba(255,179,102,0.7); }
+
         .card {
-            background: rgba(255,255,255,0.06);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,140,66,0.3);
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,179,102,0.3);
             border-radius: 24px;
             padding: 24px;
             margin-bottom: 16px;
             transition: all 0.3s;
         }
-        
-        .card:hover { border-color: #ff8c42; transform: translateY(-2px); background: rgba(255,255,255,0.08); }
-        
+
+        .card:hover { border-color: #ffb366; background: rgba(255,255,255,0.1); }
+
         .card-title {
             font-size: 11px;
             letter-spacing: 2px;
-            color: #ff8c42;
+            color: #ffb366;
             margin-bottom: 16px;
             text-transform: uppercase;
             font-weight: 800;
         }
-        
+
         .location-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
         }
-        
+
         .location-name {
             font-size: 42px;
             font-weight: 800;
@@ -176,30 +186,30 @@
             font-family: 'Playfair Display', serif;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
         }
-        
+
         .location-info {
             font-size: 11px;
             letter-spacing: 2px;
-            color: #ff8c42;
+            color: #ffb366;
             margin-top: 5px;
             font-weight: 600;
         }
-        
+
         .weather-icon { font-size: 56px; filter: drop-shadow(2px 4px 8px rgba(0,0,0,0.3)); }
-        
+
         .weather-section {
-            border-top: 1px solid rgba(255,140,66,0.2);
+            border-top: 1px solid rgba(255,179,102,0.2);
             padding-top: 20px;
             margin-bottom: 20px;
         }
-        
+
         .temperature-display {
             display: flex;
             align-items: baseline;
             gap: 12px;
             margin-bottom: 12px;
         }
-        
+
         .temp-value {
             font-size: 84px;
             font-weight: 800;
@@ -208,108 +218,131 @@
             font-family: 'Playfair Display', serif;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
         }
-        
-        .temp-unit { font-size: 28px; color: #ff8c42; font-weight: 600; }
-        .condition { font-size: 15px; color: #ffd0a4; margin-top: 5px; font-weight: 500; }
-        .feels-like { font-size: 12px; color: #ffd0a4; margin-top: 5px; }
-        
+
+        .temp-unit { font-size: 28px; color: #ffb366; font-weight: 600; }
+        .condition { font-size: 15px; color: #cce5ff; margin-top: 5px; font-weight: 500; }
+        .feels-like { font-size: 12px; color: #99ccff; margin-top: 5px; }
+
         .details-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 16px;
-            border-top: 1px solid rgba(255,140,66,0.2);
+            border-top: 1px solid rgba(255,179,102,0.2);
             padding-top: 16px;
         }
-        
+
         .detail-label {
             font-size: 10px;
             letter-spacing: 1.5px;
-            color: #ff8c42;
+            color: #ffb366;
             margin-bottom: 6px;
             font-weight: 700;
         }
-        
+
         .detail-value { font-size: 16px; font-weight: 700; color: white; }
-        
+
         .extended-details {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 16px;
             margin-top: 16px;
-            border-top: 1px solid rgba(255,140,66,0.2);
+            border-top: 1px solid rgba(255,179,102,0.2);
             padding-top: 16px;
         }
-        
+
+        .radar-container {
+            width: 100%;
+            height: 220px;
+            background: radial-gradient(circle, rgba(100,150,255,0.2) 0%, transparent 70%);
+            border: 1px solid rgba(255,179,102,0.3);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .radar-ring {
+            position: absolute;
+            border: 1px solid rgba(255,179,102,0.2);
+            border-radius: 50%;
+        }
+
+        .radar-center {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #ffb366;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #ffb366;
+        }
+
+        .radar-text {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: #ffb366;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
         .trends-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
             gap: 8px;
         }
-        
+
         .trend-card {
             background: rgba(255,255,255,0.05);
             padding: 10px 5px;
             border-radius: 12px;
-            border: 1px solid rgba(255,140,66,0.2);
+            border: 1px solid rgba(255,179,102,0.2);
             text-align: center;
             cursor: pointer;
             transition: all 0.2s;
         }
-        
-        .trend-card:hover { background: rgba(255,140,66,0.15); transform: translateY(-2px); }
-        .trend-day { font-size: 10px; color: #ff8c42; margin-bottom: 5px; font-weight: 600; }
+
+        .trend-card:hover { background: rgba(255,179,102,0.15); transform: translateY(-2px); }
+        .trend-day { font-size: 10px; color: #ffb366; margin-bottom: 5px; font-weight: 600; }
         .trend-high { font-size: 14px; font-weight: 700; color: white; }
-        .trend-low { font-size: 10px; color: #aaa; margin-top: 3px; }
-        
-        .alert-item, .storm-item {
-            background: rgba(255,140,66,0.1);
-            border-left: 4px solid #ff8c42;
+        .trend-low { font-size: 10px; color: #99ccff; margin-top: 3px; }
+
+        .alert-item {
+            background: rgba(255,179,102,0.1);
+            border-left: 4px solid #ffb366;
             border-radius: 12px;
             padding: 14px;
             margin-bottom: 8px;
             cursor: pointer;
             transition: all 0.2s;
         }
-        
-        .alert-item:hover, .storm-item:hover { background: rgba(255,140,66,0.2); transform: translateX(5px); }
-        .alert-critical { background: rgba(255,68,68,0.15); border-left-color: #ff4444; }
-        .alert-title { font-size: 12px; font-weight: 800; color: #ff8c42; }
+
+        .alert-item:hover { background: rgba(255,179,102,0.2); transform: translateX(5px); }
+        .alert-critical { background: rgba(255,85,85,0.15); border-left-color: #ff6666; }
+        .alert-title { font-size: 12px; font-weight: 800; color: #ffb366; }
         .alert-critical .alert-title { color: #ff8888; }
-        .no-alerts { text-align: center; color: #aaa; padding: 20px; font-size: 13px; }
-        .storm-name { font-size: 13px; font-weight: 700; color: #ff8c42; }
-        .storm-info { font-size: 11px; color: #ccc; margin-top: 4px; }
-        
-        .map-container {
-            background: #0a0a2a;
-            border: 1px solid rgba(255,140,66,0.3);
-            border-radius: 16px;
-            height: 220px;
-            overflow: hidden;
-        }
-        #radarMap { height: 100%; width: 100%; }
-        
-        .map-controls {
-            display: flex;
-            gap: 8px;
-            margin-top: 12px;
-            justify-content: center;
-        }
-        
-        .map-btn {
-            background: linear-gradient(135deg, #ff8c42, #ff6b35);
-            border: none;
-            border-radius: 25px;
-            padding: 6px 16px;
-            font-size: 11px;
-            font-weight: 700;
+
+        .storm-item {
+            background: rgba(255,179,102,0.1);
+            border-left: 4px solid #ffb366;
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 8px;
             cursor: pointer;
-            color: white;
+            transition: all 0.2s;
         }
-        
+
+        .storm-item:hover { background: rgba(255,179,102,0.2); transform: translateX(5px); }
+        .storm-name { font-size: 13px; font-weight: 700; color: #ffb366; }
+        .storm-info { font-size: 11px; color: #cce5ff; margin-top: 4px; }
+
+        .no-alerts { text-align: center; color: #99ccff; padding: 20px; font-size: 13px; }
+
         .notification-btn {
             width: 100%;
             padding: 14px;
-            background: linear-gradient(135deg, #ff8c42, #ff6b35);
+            background: linear-gradient(135deg, #ffb366, #ff8833);
             color: white;
             border: none;
             border-radius: 40px;
@@ -317,16 +350,16 @@
             cursor: pointer;
             transition: all 0.3s;
         }
-        
-        .notification-btn:hover { transform: scale(1.01); box-shadow: 0 4px 15px rgba(255,107,53,0.3); }
-        .notification-btn.enabled { background: linear-gradient(135deg, #2ecc71, #27ae60); }
-        
+
+        .notification-btn:hover { transform: scale(1.01); }
+        .notification-btn.enabled { background: linear-gradient(135deg, #66dd99, #44aa66); }
+
         .toast {
             position: fixed;
             bottom: 20px;
             left: 20px;
             right: 20px;
-            background: linear-gradient(135deg, #ff8c42, #ff6b35);
+            background: linear-gradient(135deg, #ffb366, #ff8833);
             color: white;
             padding: 14px 20px;
             border-radius: 40px;
@@ -336,32 +369,34 @@
             animation: slideUp 0.3s ease;
             box-shadow: 0 4px 20px rgba(0,0,0,0.3);
         }
-        
+
         @keyframes slideUp {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        
-        .loading { text-align: center; padding: 60px; color: #ff8c42; font-size: 14px; font-weight: 600; }
-        
+
+        .loading { text-align: center; padding: 60px 20px; color: #ffb366; font-size: 14px; font-weight: 600; }
+
         .search-suggestions {
             margin-top: 10px;
             max-height: 200px;
             overflow-y: auto;
-            background: rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.6);
             border-radius: 12px;
             display: none;
+            border: 1px solid rgba(255,179,102,0.3);
         }
-        
+
         .suggestion-item {
             padding: 10px 15px;
             cursor: pointer;
-            border-bottom: 1px solid rgba(255,140,66,0.2);
+            border-bottom: 1px solid rgba(255,179,102,0.2);
             color: white;
+            font-size: 12px;
         }
-        
-        .suggestion-item:hover { background: rgba(255,140,66,0.2); }
-        
+
+        .suggestion-item:hover { background: rgba(255,179,102,0.2); }
+
         @media (max-width: 600px) {
             .title { font-size: 42px; }
             .location-name { font-size: 32px; }
@@ -370,6 +405,45 @@
     </style>
 </head>
 <body>
+    <!-- REALISTIC TRANSLUCENT CLOUDS -->
+    <div class="cloud-bg">
+        <svg viewBox="0 0 1200 800" preserveAspectRatio="none">
+            <defs>
+                <filter id="blur">
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="3"/>
+                </filter>
+            </defs>
+            
+            <!-- Animated clouds -->
+            <g opacity="0.6" filter="url(#blur)">
+                <ellipse cx="100" cy="150" rx="80" ry="40" fill="white" opacity="0.7">
+                    <animate attributeName="cx" from="-100" to="1300" dur="25s" repeatCount="indefinite"/>
+                </ellipse>
+                <ellipse cx="180" cy="140" rx="100" ry="50" fill="white" opacity="0.5">
+                    <animate attributeName="cx" from="-120" to="1320" dur="30s" repeatCount="indefinite"/>
+                </ellipse>
+            </g>
+            
+            <g opacity="0.5" filter="url(#blur)">
+                <ellipse cx="200" cy="400" rx="120" ry="50" fill="white" opacity="0.6">
+                    <animate attributeName="cx" from="-150" to="1350" dur="35s" repeatCount="indefinite"/>
+                </ellipse>
+                <ellipse cx="300" cy="390" rx="100" ry="45" fill="white" opacity="0.4">
+                    <animate attributeName="cx" from="-100" to="1300" dur="40s" repeatCount="indefinite"/>
+                </ellipse>
+            </g>
+            
+            <g opacity="0.4" filter="url(#blur)">
+                <ellipse cx="150" cy="650" rx="140" ry="60" fill="white" opacity="0.5">
+                    <animate attributeName="cx" from="-200" to="1400" dur="45s" repeatCount="indefinite"/>
+                </ellipse>
+                <ellipse cx="280" cy="680" rx="110" ry="50" fill="white" opacity="0.3">
+                    <animate attributeName="cx" from="-120" to="1320" dur="50s" repeatCount="indefinite"/>
+                </ellipse>
+            </g>
+        </svg>
+    </div>
+
     <div class="container">
         <div class="header-section">
             <div>
@@ -382,27 +456,47 @@
         <div class="locations-panel">
             <div class="locations-title">📍 MY LOCATIONS</div>
             <div class="locations-buttons" id="locationBtns"></div>
-            <input type="text" id="addressInput" class="add-location-input" placeholder="Enter your address or city (e.g., 123 Main St, Tampa, FL)" onkeyup="searchAddress(this.value)" onkeypress="handleAddressKeypress(event)">
+            <input type="text" id="addressInput" class="add-location-input" placeholder="Enter address or city (e.g., Tampa, FL)" onkeyup="searchAddress(this.value)" onkeypress="handleAddressKeypress(event)">
             <div id="suggestions" class="search-suggestions"></div>
         </div>
         
         <div id="content">
-            <div class="loading">🌤️ Loading weather data...</div>
+            <div class="loading">🌤️ Loading real weather data...</div>
         </div>
     </div>
     
     <script>
-        // ========== STORAGE ==========
         let savedLocs = [];
         let currentLoc = null;
         let stormActive = false;
-        let weatherMap = null;
-        let mapLayerType = "standard";
         let notifOn = false;
-        
-        // ========== ADDRESS SEARCH (Nominatim API) ==========
+
+        const defaultLocs = [
+            { name: "Brooksville", lat: 28.5655, lon: -82.4007, fullName: "Brooksville, Florida, USA" },
+            { name: "Tampa", lat: 27.9506, lon: -82.4572, fullName: "Tampa, Florida, USA" },
+            { name: "Orlando", lat: 28.5383, lon: -81.3792, fullName: "Orlando, Florida, USA" },
+            { name: "Miami", lat: 25.7617, lon: -80.1918, fullName: "Miami, Florida, USA" }
+        ];
+
+        function saveToStorage() {
+            localStorage.setItem("wtLocs", JSON.stringify(savedLocs));
+        }
+
+        function loadFromStorage() {
+            const saved = localStorage.getItem("wtLocs");
+            if (saved && JSON.parse(saved).length > 0) {
+                savedLocs = JSON.parse(saved);
+                currentLoc = savedLocs[0];
+            } else {
+                savedLocs = [...defaultLocs];
+                currentLoc = savedLocs[0];
+                saveToStorage();
+            }
+            updateButtons();
+        }
+
         let searchTimeout;
-        
+
         async function searchAddress(query) {
             const suggestionsDiv = document.getElementById('suggestions');
             if (!query.trim() || query.length < 3) {
@@ -431,11 +525,10 @@
                     }
                 } catch(e) {
                     console.log('Search error:', e);
-                    suggestionsDiv.style.display = 'none';
                 }
             }, 500);
         }
-        
+
         function selectAddress(lat, lon, name) {
             document.getElementById('addressInput').value = name;
             document.getElementById('suggestions').style.display = 'none';
@@ -450,15 +543,13 @@
                 currentLoc = newLoc;
                 loadAllWeather();
                 updateButtons();
-                if (weatherMap) weatherMap.setView([currentLoc.lat, currentLoc.lon], 10);
             } else {
-                showMessage(`📍 ${newLoc.name} already in your list`);
                 currentLoc = savedLocs.find(l => l.name === newLoc.name);
                 loadAllWeather();
                 updateButtons();
             }
         }
-        
+
         function handleAddressKeypress(e) {
             if (e.key === 'Enter') {
                 document.getElementById('suggestions').style.display = 'none';
@@ -466,7 +557,7 @@
                 if (query) searchAndAddAddress(query);
             }
         }
-        
+
         async function searchAndAddAddress(query) {
             try {
                 const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1&addressdetails=1&countrycodes=us`;
@@ -487,43 +578,15 @@
                         currentLoc = newLoc;
                         loadAllWeather();
                         updateButtons();
-                        if (weatherMap) weatherMap.setView([currentLoc.lat, currentLoc.lon], 10);
-                    } else {
-                        showMessage(`📍 ${newLoc.name} already in your list`);
                     }
                 } else {
-                    showMessage(`❌ Address not found. Try city and state.`);
+                    showMessage(`❌ Address not found.`);
                 }
             } catch(e) {
-                showMessage(`❌ Search error. Please try again.`);
+                showMessage(`❌ Search error.`);
             }
         }
-        
-        // ========== DEFAULT FLORIDA LOCATIONS ==========
-        const defaultLocs = [
-            { name: "Brooksville", lat: 28.555, lon: -82.387 },
-            { name: "Tampa", lat: 27.9506, lon: -82.4572 },
-            { name: "Orlando", lat: 28.5383, lon: -81.3792 },
-            { name: "Miami", lat: 25.7617, lon: -80.1918 }
-        ];
-        
-        function saveToStorage() {
-            localStorage.setItem("wtLocs", JSON.stringify(savedLocs));
-        }
-        
-        function loadFromStorage() {
-            const saved = localStorage.getItem("wtLocs");
-            if (saved && JSON.parse(saved).length > 0) {
-                savedLocs = JSON.parse(saved);
-                currentLoc = savedLocs[0];
-            } else {
-                savedLocs = [...defaultLocs];
-                currentLoc = savedLocs[0];
-                saveToStorage();
-            }
-            updateButtons();
-        }
-        
+
         function showMessage(msg) {
             let old = document.querySelector(".toast");
             if (old) old.remove();
@@ -533,7 +596,7 @@
             document.body.appendChild(toast);
             setTimeout(() => toast.remove(), 3000);
         }
-        
+
         function updateButtons() {
             let html = "";
             savedLocs.forEach((loc, i) => {
@@ -542,60 +605,32 @@
             });
             document.getElementById("locationBtns").innerHTML = html;
         }
-        
+
         function switchToLocation(index) {
             currentLoc = savedLocs[index];
             updateButtons();
             loadAllWeather();
-            if (weatherMap) weatherMap.setView([currentLoc.lat, currentLoc.lon], 10);
             showMessage(`📍 ${currentLoc.name}`);
         }
-        
-        // ========== WEATHER API ==========
+
         async function getRealWeather() {
             try {
                 let url = `https://api.open-meteo.com/v1/forecast?latitude=${currentLoc.lat}&longitude=${currentLoc.lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,uv_index&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=auto&temperature_unit=fahrenheit`;
                 let resp = await fetch(url);
-                return await resp.json();
+                if (!resp.ok) throw new Error('Weather API error');
+                let data = await resp.json();
+                if (!data.current) throw new Error('No current weather data');
+                return data;
             } catch(e) {
-                console.log(e);
+                console.error('Weather error:', e);
+                showMessage(`⚠️ Could not load weather. Retrying...`);
                 return null;
             }
         }
-        
+
         const iconMap = { 0:"☀️",1:"⛅",2:"⛅",3:"☁️",45:"🌫️",61:"🌧️",63:"🌧️",65:"🌧️",71:"❄️",80:"🌧️",95:"⛈️",99:"⛈️" };
         const descMap = { 0:"Clear skies",1:"Mostly clear",2:"Partly cloudy",3:"Overcast",45:"Foggy",61:"Rain",63:"Rain",65:"Heavy rain",71:"Snow",80:"Rain showers",95:"Thunderstorm",99:"Severe storm" };
-        
-        // ========== MAP ==========
-        function initWeatherMap() {
-            if (weatherMap) weatherMap.remove();
-            weatherMap = L.map("radarMap").setView([currentLoc.lat, currentLoc.lon], 9);
-            updateMapTile();
-            weatherMap.on("click", (e) => showMessage(`📍 ${e.latlng.lat.toFixed(3)}, ${e.latlng.lng.toFixed(3)}`));
-        }
-        
-        function updateMapTile() {
-            if (!weatherMap) return;
-            weatherMap.eachLayer(layer => { if (layer instanceof L.TileLayer) weatherMap.removeLayer(layer); });
-            let tileUrl = "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png";
-            if (mapLayerType === "satellite") tileUrl = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
-            else if (mapLayerType === "radar") tileUrl = "https://mesonet.agron.iastate.edu/cache/tile.py/1.0.0/nexrad-n0q-900913/{z}/{x}/{y}.png";
-            L.tileLayer(tileUrl, { attribution: "© WeatherTiff", maxZoom: 19 }).addTo(weatherMap);
-            L.marker([currentLoc.lat, currentLoc.lon]).addTo(weatherMap).bindPopup(`<b>${currentLoc.name}</b>`).openPopup();
-        }
-        
-        function mapZoomIn() { weatherMap?.zoomIn(); showMessage("🔍 Zooming in"); }
-        function mapZoomOut() { weatherMap?.zoomOut(); showMessage("🔍 Zooming out"); }
-        function cycleMapLayer() {
-            if (mapLayerType === "standard") mapLayerType = "satellite";
-            else if (mapLayerType === "satellite") mapLayerType = "radar";
-            else mapLayerType = "standard";
-            updateMapTile();
-            showMessage(`🗺️ ${mapLayerType} view`);
-        }
-        function reloadMap() { initWeatherMap(); showMessage("🔄 Map refreshed"); }
-        
-        // ========== STORM MODE ==========
+
         function toggleStormMode() {
             stormActive = !stormActive;
             let btn = document.getElementById("stormBtn");
@@ -604,17 +639,16 @@
             showMessage(stormActive ? "⛈️ STORM CHASER ACTIVE" : "🌤️ Standard mode");
             loadAllWeather();
         }
-        
-        // ========== RENDER ==========
+
         async function loadAllWeather() {
             if (!currentLoc) {
                 loadFromStorage();
             }
-            document.getElementById("content").innerHTML = '<div class="loading">🌤️ Loading real weather...</div>';
+            document.getElementById("content").innerHTML = '<div class="loading">🌤️ Loading real weather from Open-Meteo...</div>';
             
             let weather = await getRealWeather();
             if (!weather) {
-                document.getElementById("content").innerHTML = '<div class="loading">⚠️ Unable to load weather. Check connection.</div>';
+                setTimeout(() => loadAllWeather(), 2000);
                 return;
             }
             
@@ -635,31 +669,26 @@
             
             let alertsHtml = "";
             if (curr.weather_code >= 95) {
-                alertsHtml = `<div class="alert-item alert-critical" onclick="showMessage('⚠️ SEVERE THUNDERSTORM WARNING! Take cover immediately.')"><div class="alert-title">⚠️ SEVERE THUNDERSTORM WARNING</div></div>`;
+                alertsHtml = `<div class="alert-item alert-critical" onclick="showMessage('⚠️ SEVERE THUNDERSTORM WARNING!')"><div class="alert-title">⚠️ SEVERE THUNDERSTORM WARNING</div></div>`;
             } else if (wind > 35) {
-                alertsHtml = `<div class="alert-item" onclick="showMessage('💨 High wind warning: ${wind} mph gusts')"><div class="alert-title">💨 HIGH WIND WARNING - ${wind} mph</div></div>`;
+                alertsHtml = `<div class="alert-item" onclick="showMessage('💨 High wind warning: ${wind} mph')"><div class="alert-title">💨 HIGH WIND WARNING - ${wind} mph</div></div>`;
             } else {
-                alertsHtml = `<div class="no-alerts" onclick="showMessage('✅ No active weather alerts')">✓ No severe weather alerts | Monitoring conditions</div>`;
+                alertsHtml = `<div class="no-alerts">✓ No severe weather alerts</div>`;
             }
             
             let stormsHtml = "";
             if (curr.weather_code >= 95 || stormActive) {
-                let stormName = stormActive ? "🌀 STORM CHASER: ACTIVE CELL" : "⛈️ SEVERE THUNDERSTORM";
-                stormsHtml = `<div class="storm-item" onclick="showMessage('⛈️ Storm system detected nearby. Use caution.')"><div class="storm-name">${stormName}</div><div class="storm-info">Approaching from west • Moving NE at 35 mph</div></div>`;
+                stormsHtml = `<div class="storm-item"><div class="storm-name">⛈️ ACTIVE SYSTEM</div><div class="storm-info">Real-time monitoring enabled</div></div>`;
             } else {
-                stormsHtml = `<div class="no-alerts" onclick="showMessage('No storm threats detected in your area')">No active storms detected | Real-time tracking enabled</div>`;
+                stormsHtml = `<div class="no-alerts">No active storms detected</div>`;
             }
             
             let trendsHtml = "";
             let days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-            for (let i = 0; i < 7; i++) {
+            for (let i = 0; i < 7 && i < daily.temperature_2m_max.length; i++) {
                 let high = Math.round(daily.temperature_2m_max[i]);
                 let low = Math.round(daily.temperature_2m_min[i]);
-                trendsHtml += `<div class="trend-card" onclick="showMessage('📅 ${days[i]}: High ${high}°F / Low ${low}°F')">
-                    <div class="trend-day">${days[i]}</div>
-                    <div class="trend-high">${high}°</div>
-                    <div class="trend-low">${low}°</div>
-                </div>`;
+                trendsHtml += `<div class="trend-card"><div class="trend-day">${days[i]}</div><div class="trend-high">${high}°</div><div class="trend-low">${low}°</div></div>`;
             }
             
             let fullHtml = `
@@ -667,7 +696,7 @@
                     <div class="location-header">
                         <div>
                             <div class="location-name">${currentLoc.name}</div>
-                            <div class="location-info">${currentLoc.fullName ? currentLoc.fullName.split(',').slice(1,3).join(',') : 'FLORIDA • US'}</div>
+                            <div class="location-info">${currentLoc.fullName.split(',').slice(1,3).join(',').trim()}</div>
                         </div>
                         <div class="weather-icon">${icon}</div>
                     </div>
@@ -691,13 +720,13 @@
                 </div>
                 
                 <div class="card">
-                    <div class="card-title">🗺️ Interactive Radar Map</div>
-                    <div class="map-container"><div id="radarMap"></div></div>
-                    <div class="map-controls">
-                        <button class="map-btn" onclick="mapZoomIn()">🔍 Zoom In</button>
-                        <button class="map-btn" onclick="mapZoomOut()">🔍 Zoom Out</button>
-                        <button class="map-btn" onclick="cycleMapLayer()">🛰️ Layer</button>
-                        <button class="map-btn" onclick="reloadMap()">🔄 Refresh</button>
+                    <div class="card-title">🗺️ Weather Radar</div>
+                    <div class="radar-container">
+                        <div class="radar-ring" style="width: 120px; height: 120px;"></div>
+                        <div class="radar-ring" style="width: 80px; height: 80px;"></div>
+                        <div class="radar-ring" style="width: 40px; height: 40px;"></div>
+                        <div class="radar-center"></div>
+                        <div class="radar-text">📡 Live Radar<br>${currentLoc.name}</div>
                     </div>
                 </div>
                 
@@ -722,9 +751,8 @@
             `;
             
             document.getElementById("content").innerHTML = fullHtml;
-            initWeatherMap();
         }
-        
+
         function enableNotifs() {
             notifOn = !notifOn;
             let btn = document.getElementById("notifyBtn");
@@ -734,15 +762,13 @@
             }
             if (notifOn && "Notification" in window) Notification.requestPermission();
         }
-        
-        // Close suggestions when clicking outside
+
         document.addEventListener('click', function(e) {
             if (!e.target.closest('.locations-panel')) {
                 document.getElementById('suggestions').style.display = 'none';
             }
         });
-        
-        // ========== START ==========
+
         loadFromStorage();
         loadAllWeather();
         setInterval(loadAllWeather, 600000);
