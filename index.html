@@ -1,338 +1,373 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>WeatherTiff - Premium Weather Intelligence</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital@0;1&family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body {
-            background: linear-gradient(135deg, #2d1b4e 0%, #3d2a5f 30%, #4a3570 60%, #2d1b4e 100%);
-            min-height: 100vh;
-            font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-            color: white;
-            padding: 30px 20px;
-            position: relative;
-            overflow-x: hidden;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        svg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0.6; z-index: 5; }
+<title>WeatherTiff - Premium Weather Intelligence</title>
 
-        .container { max-width: 700px; margin: 0 auto; position: relative; z-index: 10; }
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;800&family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
 
-        .header-section {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 30px;
-            gap: 16px;
-        }
+<style>
 
-        .title { font-size: 56px; font-weight: 800; margin: 0; letter-spacing: -2px; font-family: 'Playfair Display', serif; }
-        .title-tiff { color: #d4a574; font-style: italic; font-weight: 400; }
-        .subtitle { font-size: 11px; letter-spacing: 3px; color: #a8a8d0; margin: 8px 0 0; font-weight: 600; }
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
 
-        .storm-btn {
-            padding: 8px 20px;
-            background: linear-gradient(135deg, #d4a574, #c9935f);
-            color: white;
-            border: none;
-            border-radius: 30px;
-            font-size: 11px;
-            font-weight: 800;
-            cursor: pointer;
-        }
+body{
+font-family:'Open Sans',sans-serif;
+background:linear-gradient(135deg,#2d1b4e 0%,#3d2a5f 35%,#4a3570 70%,#2d1b4e 100%);
+color:white;
+padding:20px;
+min-height:100vh;
+overflow-x:hidden;
+}
 
-        .locations-panel {
-            background: rgba(212,165,116,0.1);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(212,165,116,0.25);
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
+.container{
+max-width:700px;
+margin:auto;
+}
 
-        .locations-title { font-size: 12px; color: #d4a574; margin-bottom: 15px; font-weight: 800; letter-spacing: 1px; }
+.header{
+position:relative;
+margin-bottom:25px;
+}
 
-        .locations-buttons { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 15px; }
+.cloud{
+position:absolute;
+top:-15px;
+left:0;
+width:120px;
+opacity:.7;
+animation:floatCloud 10s ease-in-out infinite;
+}
 
-        .loc-btn {
-            padding: 8px 18px;
-            border-radius: 30px;
-            font-size: 12px;
-            font-weight: 700;
-            cursor: pointer;
-            border: none;
-        }
+@keyframes floatCloud{
+0%{transform:translateX(0);}
+50%{transform:translateX(25px);}
+100%{transform:translateX(0);}
+}
 
-        .loc-btn.active { background: linear-gradient(135deg, #d4a574, #c9935f); color: white; }
-        .loc-btn.inactive { background: rgba(212,165,116,0.15); border: 1px solid #d4a574; color: #d4a574; }
+.title{
+font-size:56px;
+font-family:'Playfair Display',serif;
+font-weight:800;
+}
 
-        .location-input-group { display: flex; gap: 8px; }
+.title span{
+color:#d4a574;
+font-style:italic;
+font-weight:400;
+}
 
-        .add-location-input {
-            flex: 1;
-            padding: 12px 16px;
-            border-radius: 40px;
-            border: 1px solid rgba(212,165,116,0.3);
-            background: rgba(255,255,255,0.08);
-            color: white;
-            font-size: 13px;
-        }
+.subtitle{
+letter-spacing:3px;
+font-size:11px;
+margin-top:8px;
+color:#cdb7ff;
+}
 
-        .add-location-input::placeholder { color: rgba(212,165,116,0.7); }
+.card{
+background:rgba(255,255,255,.07);
+backdrop-filter:blur(18px);
+border:1px solid rgba(212,165,116,.25);
+border-radius:24px;
+padding:24px;
+margin-bottom:18px;
+}
 
-        .geo-btn {
-            padding: 12px 16px;
-            background: linear-gradient(135deg, #d4a574, #c9935f);
-            border: none;
-            border-radius: 40px;
-            color: white;
-            font-weight: 700;
-            cursor: pointer;
-            font-size: 13px;
-        }
+.location{
+font-size:40px;
+font-family:'Playfair Display',serif;
+font-weight:800;
+}
 
-        .card {
-            background: rgba(255,255,255,0.06);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(212,165,116,0.25);
-            border-radius: 24px;
-            padding: 24px;
-            margin-bottom: 16px;
-        }
+.temp{
+font-size:82px;
+font-family:'Playfair Display',serif;
+font-weight:800;
+line-height:1;
+}
 
-        .card-title { font-size: 11px; letter-spacing: 2px; color: #d4a574; margin-bottom: 16px; text-transform: uppercase; font-weight: 800; }
+.condition{
+margin-top:6px;
+color:#dfeeff;
+}
 
-        .location-name { font-size: 42px; font-weight: 800; margin: 0; font-family: 'Playfair Display', serif; }
-        .location-info { font-size: 11px; letter-spacing: 2px; color: #d4a574; margin-top: 5px; font-weight: 600; }
+.details{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:15px;
+margin-top:20px;
+}
 
-        .temp-large { font-size: 84px; font-weight: 800; line-height: 0.95; font-family: 'Playfair Display', serif; margin: 0; }
-        .temp-unit { font-size: 28px; color: #d4a574; font-weight: 600; }
-        .condition { font-size: 15px; color: #cce5ff; margin: 5px 0; }
+.detail{
+text-align:center;
+}
 
-        .details-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
-            border-top: 1px solid rgba(212,165,116,0.15);
-            padding-top: 16px;
-            margin-top: 16px;
-        }
+.label{
+font-size:10px;
+color:#d4a574;
+letter-spacing:1px;
+margin-bottom:5px;
+}
 
-        .detail-label { font-size: 10px; letter-spacing: 1.5px; color: #d4a574; margin-bottom: 6px; font-weight: 700; text-transform: uppercase; }
-        .detail-value { font-size: 16px; font-weight: 700; color: white; }
+.value{
+font-size:17px;
+font-weight:700;
+}
 
-        .trends-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+.radar{
+width:100%;
+height:320px;
+border-radius:18px;
+overflow:hidden;
+border:1px solid rgba(212,165,116,.25);
+}
 
-        .trend-card {
-            background: rgba(255,255,255,0.04);
-            padding: 12px 5px;
-            border-radius: 8px;
-            text-align: center;
-            border: 1px solid rgba(212,165,116,0.2);
-            cursor: pointer;
-        }
+.radar iframe{
+width:100%;
+height:100%;
+border:none;
+}
 
-        .trend-day { font-size: 10px; color: #d4a574; margin-bottom: 6px; font-weight: 600; }
-        .trend-icon { font-size: 20px; margin: 6px 0; }
-        .trend-temp { font-size: 13px; font-weight: 700; color: white; margin: 4px 0; }
-        .trend-low { font-size: 9px; color: #a8a8d0; margin: 2px 0 0; }
+.forecast{
+display:grid;
+grid-template-columns:repeat(7,1fr);
+gap:8px;
+margin-top:15px;
+}
 
-        .radar-container {
-            width: 100%;
-            height: 220px;
-            background: rgba(100,150,255,0.1);
-            border: 1px solid rgba(212,165,116,0.25);
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
+.day-card{
+background:rgba(255,255,255,.05);
+border:1px solid rgba(212,165,116,.2);
+padding:10px 5px;
+border-radius:10px;
+text-align:center;
+cursor:pointer;
+transition:.25s;
+}
 
-        .radar-ring { position: absolute; border: 1px solid rgba(212,165,116,0.2); border-radius: 50%; }
-        .radar-center { position: absolute; width: 8px; height: 8px; background: #d4a574; border-radius: 50%; box-shadow: 0 0 10px #d4a574; }
-        .radar-text { position: relative; z-index: 2; text-align: center; color: #d4a574; font-size: 13px; font-weight: 600; }
+.day-card:hover{
+transform:translateY(-2px);
+}
 
-        .loading { text-align: center; padding: 60px 20px; color: #d4a574; font-size: 14px; font-weight: 600; }
-        .error { color: #ff8888; padding: 20px; text-align: center; }
+.day-card.active{
+border:2px solid #d4a574;
+background:rgba(212,165,116,.2);
+}
 
-        @keyframes floatCloud { 0% { transform: translateX(-200px); } 50% { transform: translateX(calc(50vw - 100px)); } 100% { transform: translateX(100vw); } }
-    </style>
+.day{
+font-size:11px;
+color:#d4a574;
+margin-bottom:5px;
+}
+
+.icon{
+font-size:22px;
+}
+
+.high{
+font-weight:700;
+}
+
+.low{
+font-size:11px;
+color:#bcbcbc;
+}
+
+.forecast-detail{
+margin-top:15px;
+padding:15px;
+border-radius:14px;
+background:rgba(212,165,116,.08);
+display:none;
+}
+
+.loading{
+text-align:center;
+padding:60px;
+}
+
+</style>
 </head>
+
 <body>
-    <!-- ORIGINAL CLOUD SHAPES - FLOATING -->
-    <svg viewBox="0 0 1200 800" style="animation: floatCloud 30s infinite ease-in-out;">
-        <g opacity="0.6">
-            <ellipse cx="80" cy="100" rx="40" ry="25" fill="white"/>
-            <ellipse cx="50" cy="110" rx="35" ry="20" fill="white"/>
-            <ellipse cx="110" cy="110" rx="38" ry="22" fill="white"/>
-            <ellipse cx="30" cy="105" rx="25" ry="18" fill="white"/>
-            <ellipse cx="130" cy="108" rx="30" ry="20" fill="white"/>
-        </g>
-    </svg>
 
-    <div class="container">
-        <div class="header-section">
-            <div>
-                <h1 class="title">Weather<span class="title-tiff">Tiff</span></h1>
-                <p class="subtitle">PREMIUM WEATHER INTELLIGENCE</p>
-            </div>
-            <button class="storm-btn" onclick="alert('⛈️ Storm Mode')">⛈️ STORM</button>
-        </div>
+<div class="container">
 
-        <div class="locations-panel">
-            <div class="locations-title">📍 MY LOCATIONS</div>
-            <div class="locations-buttons" id="locButtons"></div>
-            <div class="location-input-group">
-                <input type="text" id="searchInput" class="add-location-input" placeholder="Enter address..." onkeypress="if(event.key==='Enter') addLoc(this.value); this.value='';">
-                <button class="geo-btn" onclick="getLocation()">📍 Find Me</button>
-            </div>
-        </div>
+<div class="header">
 
-        <div id="content">
-            <div class="loading">🌤️ Loading weather...</div>
-        </div>
-    </div>
+<svg class="cloud" viewBox="0 0 200 100">
+<ellipse cx="80" cy="40" rx="35" ry="20" fill="white"/>
+<ellipse cx="50" cy="50" rx="30" ry="18" fill="white"/>
+<ellipse cx="110" cy="50" rx="30" ry="18" fill="white"/>
+</svg>
 
-    <script>
-        let locations = [
-            { name: "Brooksville", lat: 28.5655, lon: -82.4007 },
-            { name: "Tampa", lat: 27.9506, lon: -82.4572 },
-            { name: "Orlando", lat: 28.5383, lon: -81.3792 },
-            { name: "Miami", lat: 25.7617, lon: -80.1918 }
-        ];
+<div class="title">
+Weather<span>Tiff</span>
+</div>
 
-        let current = locations[0];
+<div class="subtitle">
+PREMIUM WEATHER INTELLIGENCE
+</div>
 
-        const icons = { 0: "☀️", 1: "⛅", 2: "⛅", 3: "☁️", 45: "🌫️", 61: "🌧️", 63: "🌧️", 65: "🌧️", 71: "❄️", 80: "🌧️", 95: "⛈️", 99: "⛈️" };
-        const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+</div>
 
-        function updateButtons() {
-            document.getElementById('locButtons').innerHTML = locations.map((loc, i) => 
-                `<button class="loc-btn ${loc.name === current.name ? 'active' : 'inactive'}" onclick="current=locations[${i}];updateButtons();load()">${loc.name}</button>`
-            ).join('');
-        }
+<div id="weather"></div>
 
-        function addLoc(name) {
-            if (name.trim() && !locations.some(l => l.name === name)) {
-                locations.push({ name: name, lat: 28.5, lon: -82.4 });
-                current = locations[locations.length - 1];
-                updateButtons();
-                load();
-            }
-        }
+</div>
 
-        function getLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(pos => {
-                    current = { name: "My Location", lat: pos.coords.latitude, lon: pos.coords.longitude };
-                    updateButtons();
-                    load();
-                }, err => console.log('Geolocation error:', err));
-            }
-        }
+<script>
 
-        async function load() {
-            document.getElementById('content').innerHTML = '<div class="loading">🌤️ Fetching weather for: ' + current.lat + ' ' + current.lon + '</div>';
+const LAT=28.5655;
+const LON=-82.4007;
 
-            try {
-                let url = `https://api.open-meteo.com/v1/forecast?latitude=${current.lat}&longitude=${current.lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,uv_index&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=auto&temperature_unit=fahrenheit`;
-                
-                let res = await fetch(url, { method: 'GET', mode: 'cors' });
-                
-                if (!res.ok) throw new Error('HTTP ' + res.status);
-                
-                let data = await res.json();
+const icons={
+0:"☀️",
+1:"🌤️",
+2:"⛅",
+3:"☁️",
+45:"🌫️",
+48:"🌫️",
+51:"🌦️",
+53:"🌦️",
+55:"🌦️",
+61:"🌧️",
+63:"🌧️",
+65:"🌧️",
+71:"❄️",
+80:"🌦️",
+81:"🌧️",
+82:"🌧️",
+95:"⛈️",
+96:"⛈️",
+99:"⛈️"
+};
 
-                if (!data.current) throw new Error('No weather data');
+async function loadWeather(){
 
-                let curr = data.current;
-                let daily = data.daily;
+const res=await fetch(
+`https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&current=temperature_2m,apparent_temperature,relative_humidity_2m,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min&timezone=auto&temperature_unit=fahrenheit`
+);
 
-                let sunrise = daily.sunrise[0].split('T')[1].slice(0, 5);
-                let sunset = daily.sunset[0].split('T')[1].slice(0, 5);
+const data=await res.json();
 
-                let icon = icons[curr.weather_code] || '🌡️';
-                let temp = Math.round(curr.temperature_2m);
-                let feels = Math.round(curr.apparent_temperature);
-                let wind = Math.round(curr.wind_speed_10m);
-                let humidity = curr.relative_humidity_2m;
-                let uv = Math.round(curr.uv_index || 5);
+const current=data.current;
+const daily=data.daily;
 
-                let trends = '';
-                for (let i = 0; i < 7 && i < daily.temperature_2m_max.length; i++) {
-                    let high = Math.round(daily.temperature_2m_max[i]);
-                    let low = Math.round(daily.temperature_2m_min[i]);
-                    let dayIcon = icons[daily.weather_code[i]] || '🌡️';
-                    trends += `<div class="trend-card"><div class="trend-day">${days[i]}</div><div class="trend-icon">${dayIcon}</div><div class="trend-temp">${high}°</div><div class="trend-low">${low}°</div></div>`;
-                }
+let forecastHTML='';
 
-                document.getElementById('content').innerHTML = `
-                    <div class="card">
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
-                            <div>
-                                <div class="location-name">${current.name}</div>
-                                <div class="location-info">Real-time Weather</div>
-                            </div>
-                            <div style="font-size: 56px;">${icon}</div>
-                        </div>
-                        <div style="border-top: 1px solid rgba(212,165,116,0.15); padding-top: 20px; margin-bottom: 20px;">
-                            <div style="display: flex; gap: 12px; align-items: baseline;">
-                                <div class="temp-large">${temp}</div>
-                                <div class="temp-unit">°F</div>
-                            </div>
-                            <div class="condition">Feels like ${feels}°F</div>
-                        </div>
-                        <div class="details-grid">
-                            <div><div class="detail-label">Wind</div><div class="detail-value">${wind} mph</div></div>
-                            <div><div class="detail-label">Humidity</div><div class="detail-value">${humidity}%</div></div>
-                            <div><div class="detail-label">UV</div><div class="detail-value">${uv}</div></div>
-                        </div>
-                        <div style="margin-top: 16px; border-top: 1px solid rgba(212,165,116,0.15); padding-top: 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-                            <div><div class="detail-label">Sunrise</div><div class="detail-value">${sunrise}</div></div>
-                            <div><div class="detail-label">Sunset</div><div class="detail-value">${sunset}</div></div>
-                        </div>
-                    </div>
+for(let i=0;i<7;i++){
 
-                    <div class="card">
-                        <div class="card-title">🗺️ Radar Map</div>
-                        <div class="radar-container">
-                            <div class="radar-ring" style="width: 120px; height: 120px;"></div>
-                            <div class="radar-ring" style="width: 80px; height: 80px;"></div>
-                            <div class="radar-ring" style="width: 40px; height: 40px;"></div>
-                            <div class="radar-center"></div>
-                            <div class="radar-text">📡 Radar<br>${current.name}</div>
-                        </div>
-                    </div>
+forecastHTML+=`
+<div class="day-card"
+onclick="showDay(${i})"
+id="day${i}">
+<div class="day">
+${new Date(Date.now()+i*86400000).toLocaleDateString('en-US',{weekday:'short'})}
+</div>
 
-                    <div class="card">
-                        <div class="card-title">⚠️ Alerts</div>
-                        <div style="text-align: center; color: #a8a8d0; padding: 20px;">✓ No severe alerts</div>
-                    </div>
+<div class="icon">
+${icons[daily.weather_code[i]]||'🌤️'}
+</div>
 
-                    <div class="card">
-                        <div class="card-title">📈 7-Day Forecast</div>
-                        <div class="trends-grid">${trends}</div>
-                    </div>
+<div class="high">
+${Math.round(daily.temperature_2m_max[i])}°
+</div>
 
-                    <div class="card">
-                        <button class="geo-btn" style="width: 100%;">🔔 Enable Alerts</button>
-                    </div>
-                `;
-            } catch (e) {
-                console.error('Error:', e);
-                document.getElementById('content').innerHTML = '<div class="error">❌ ' + e.message + '<br><br>Try uploading to GitHub/Vercel instead of opening locally</div>';
-            }
-        }
+<div class="low">
+${Math.round(daily.temperature_2m_min[i])}°
+</div>
+</div>`;
+}
 
-        updateButtons();
-        load();
-    </script>
+document.getElementById('weather').innerHTML=`
+
+<div class="card">
+
+<div class="location">Brooksville</div>
+
+<div class="temp">
+${Math.round(current.temperature_2m)}°
+</div>
+
+<div class="condition">
+Feels like ${Math.round(current.apparent_temperature)}°
+</div>
+
+<div class="details">
+
+<div class="detail">
+<div class="label">WIND</div>
+<div class="value">${Math.round(current.wind_speed_10m)} mph</div>
+</div>
+
+<div class="detail">
+<div class="label">HUMIDITY</div>
+<div class="value">${current.relative_humidity_2m}%</div>
+</div>
+
+<div class="detail">
+<div class="label">CONDITION</div>
+<div class="value">${icons[current.weather_code]||'🌤️'}</div>
+</div>
+
+</div>
+
+</div>
+
+<div class="card">
+<h3 style="margin-bottom:15px;color:#d4a574;">🗺 Radar Map</h3>
+
+<div class="radar">
+<iframe
+src="https://embed.windy.com/embed2.html?lat=28.56&lon=-82.40&detailLat=28.56&detailLon=-82.40&zoom=7&level=surface&overlay=radar">
+</iframe>
+</div>
+</div>
+
+<div class="card">
+
+<h3 style="margin-bottom:15px;color:#d4a574;">
+📈 7 Day Forecast
+</h3>
+
+<div class="forecast">
+${forecastHTML}
+</div>
+
+<div class="forecast-detail" id="forecastDetail"></div>
+
+</div>
+`;
+}
+
+function showDay(i){
+
+document.querySelectorAll('.day-card')
+.forEach(card=>card.classList.remove('active'));
+
+document.getElementById('day'+i)
+.classList.add('active');
+
+const detail=document.getElementById('forecastDetail');
+
+detail.style.display='block';
+
+detail.innerHTML=`
+<h3>Forecast Day ${i+1}</h3>
+<p style="margin-top:8px;">
+Detailed forecast selected.
+</p>
+`;
+}
+
+loadWeather();
+
+</script>
+
 </body>
 </html>
