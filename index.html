@@ -216,7 +216,34 @@ body.light-mode .location {
     color: white;
     font-size: 13px;
 }
+<button class="map-btn" onclick="findMeLocation()">
+📍 Find Me
+</button>
+    function findMeLocation(){
 
+    if(!navigator.geolocation){
+        showToast("Location not supported");
+        return;
+    }
+
+    navigator.geolocation.getCurrentPosition(pos=>{
+
+        currentLoc = {
+            name:"My Location",
+            lat:pos.coords.latitude,
+            lon:pos.coords.longitude
+        };
+
+        loadAllWeather();
+        showToast("📍 Location Found");
+
+    },()=>{
+
+        showToast("❌ Unable to get location");
+
+    });
+
+    }
 .address-input::placeholder {
     color: rgba(212,165,116,0.6);
 }
