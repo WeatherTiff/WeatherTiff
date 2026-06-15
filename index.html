@@ -37,12 +37,6 @@ body.light-mode .card {
     background: rgba(255,255,255,0.85);
 }
 
-body.light-mode .detail-value,
-body.light-mode .temp,
-body.light-mode .location {
-    color: #1a1a2e;
-}
-
 .container {
     max-width: 700px;
     margin: auto;
@@ -50,95 +44,118 @@ body.light-mode .location {
     z-index: 2;
 }
 
-/* HEADER */
+/* HEADER SECTION */
 .header {
     position: relative;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
+    text-align: center;
 }
 
-.title {
-    font-size: 56px;
+/* FANCY LUXURY TIFF WITH EXTENDED "ff" - like calligraphy */
+.fancy-title {
+    font-size: 62px;
     font-family: 'Playfair Display', serif;
     font-weight: 800;
-    position: relative;
-    z-index: 20;
     letter-spacing: -1px;
+    position: relative;
+    display: inline-block;
 }
 
-/* FANCY TIFF FONT - CURSIVE/ITALIC STYLE */
-.title span {
+.weather-part {
+    color: white;
+    font-weight: 700;
+}
+
+.tiff-part {
     color: #d4a574;
     font-style: italic;
     font-weight: 900;
-    font-family: 'Playfair Display', 'Times New Roman', serif;
-    text-shadow: 2px 2px 8px rgba(212,165,116,0.4);
-    letter-spacing: 1px;
-    display: inline-block;
-    font-size: 1.1em;
-}
-
-/* CLOUD RUNNING ACROSS THE TOP OF PREMIUM WEATHER INTELLIGENCE */
-.cloud-banner {
+    font-family: 'Playfair Display', serif;
     position: relative;
-    height: 40px;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    overflow: hidden;
+    display: inline-block;
 }
 
-.cloud-runner {
+/* Extended "ff" - the second f drops below */
+.tiff-part::after {
+    content: '';
     position: absolute;
-    width: 100px;
-    height: 40px;
-    left: -120px;
-    top: -8px;
-    opacity: 0.75;
-    animation: cloudAcross 14s linear infinite;
-    z-index: 5;
-    pointer-events: none;
+    bottom: -8px;
+    right: -5px;
+    width: 35px;
+    height: 20px;
+    background: rgba(212,165,116,0.3);
+    border-radius: 0 0 10px 10px;
+    z-index: -1;
 }
 
-@keyframes cloudAcross {
-    0% {
-        left: -120px;
-    }
-    100% {
-        left: 100%;
-    }
-}
-
-/* Second cloud slower */
-.cloud-runner-2 {
+/* Fancy underline/swash for luxury feel */
+.fancy-title::before {
+    content: '';
     position: absolute;
-    width: 70px;
-    height: 30px;
-    left: -90px;
-    top: 5px;
-    opacity: 0.5;
-    animation: cloudAcross2 22s linear infinite;
-    z-index: 5;
-    pointer-events: none;
-    animation-delay: 7s;
+    bottom: -8px;
+    left: 10%;
+    width: 80%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #d4a574, #d4a574, transparent);
 }
 
-@keyframes cloudAcross2 {
-    0% {
-        left: -90px;
-    }
-    100% {
-        left: 100%;
-    }
+/* SUBTITLE WITH CLOUD OVERLAY - Cloud FLOATS ACROSS the words */
+.subtitle-container {
+    position: relative;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    text-align: center;
+    overflow: visible;
+    min-height: 60px;
 }
 
-.subtitle {
-    letter-spacing: 4px;
+.premium-text {
     font-size: 10px;
-    margin-top: 5px;
+    letter-spacing: 4px;
     color: #cdb7ff;
     font-weight: 600;
+    text-transform: uppercase;
     position: relative;
-    z-index: 20;
-    text-align: center;
+    z-index: 5;
+    background: transparent;
+    display: inline-block;
+    padding: 0 10px;
+}
+
+/* FLOATING CLOUD - sits ON TOP of the text, 60% opacity */
+.floating-cloud-overlay {
+    position: absolute;
+    top: 50%;
+    left: -30px;
+    transform: translateY(-50%);
+    width: 200px;
+    opacity: 0.6;
+    pointer-events: none;
+    z-index: 10;
+    animation: floatAcross 12s ease-in-out infinite;
+}
+
+@keyframes floatAcross {
+    0% {
+        left: -30px;
+        opacity: 0.6;
+    }
+    50% {
+        left: calc(100% - 170px);
+        opacity: 0.6;
+    }
+    100% {
+        left: -30px;
+        opacity: 0.6;
+    }
+}
+
+/* Cloud SVG styling */
+.cloud-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
 }
 
 .dark-toggle {
@@ -154,7 +171,6 @@ body.light-mode .location {
     position: absolute;
     top: 0;
     right: 0;
-    z-index: 20;
 }
 
 .dark-toggle:hover {
@@ -215,10 +231,6 @@ body.light-mode .location {
     background: rgba(255,255,255,0.1);
     color: white;
     font-size: 13px;
-}
-
-.address-input::placeholder {
-    color: rgba(212,165,116,0.6);
 }
 
 .card {
@@ -287,7 +299,6 @@ body.light-mode .location {
     margin-top: 15px;
 }
 
-/* Windy Radar Container */
 .radar {
     width: 100%;
     height: 320px;
@@ -319,12 +330,6 @@ body.light-mode .location {
     font-weight: 600;
     cursor: pointer;
     color: #1a2332;
-    transition: all 0.2s;
-}
-
-.map-btn:hover {
-    transform: scale(1.02);
-    background: #e8b88f;
 }
 
 .forecast {
@@ -347,11 +352,6 @@ body.light-mode .location {
 .day-card:hover {
     transform: translateY(-3px);
     background: rgba(212,165,116,0.15);
-}
-
-.day-card.active {
-    border: 2px solid #d4a574;
-    background: rgba(212,165,116,0.2);
 }
 
 .day {
@@ -401,21 +401,11 @@ body.light-mode .location {
     color: #d4a574;
 }
 
-.alert-critical .alert-title {
-    color: #ff8888;
-}
-
 .no-alerts {
     text-align: center;
     color: #aaa;
     padding: 20px;
     font-size: 13px;
-}
-
-.storm-name {
-    font-size: 13px;
-    font-weight: 700;
-    color: #ff8c42;
 }
 
 .aqi-grid {
@@ -430,11 +420,6 @@ body.light-mode .location {
     border-radius: 12px;
     text-align: center;
     cursor: pointer;
-    transition: all 0.2s;
-}
-
-.aqi-card:hover {
-    background: rgba(212,165,116,0.15);
 }
 
 .aqi-value {
@@ -453,10 +438,6 @@ body.light-mode .location {
     font-weight: 800;
     cursor: pointer;
     transition: all 0.3s;
-}
-
-.notification-btn:hover {
-    transform: scale(1.01);
 }
 
 .notification-btn.enabled {
@@ -512,16 +493,15 @@ body.light-mode .location {
 }
 
 @media (max-width: 600px) {
-    .title { font-size: 42px; }
+    .fancy-title { font-size: 42px; }
     .location { font-size: 32px; }
     .temp { font-size: 62px; }
     .forecast { gap: 4px; }
     .day-card { padding: 8px 3px; }
     .details { grid-template-columns: repeat(2, 1fr); }
-    .dark-toggle { position: static; margin-bottom: 10px; }
-    .header { display: flex; flex-direction: column; }
-    .cloud-banner { height: 30px; }
-    .cloud-runner { width: 70px; height: 30px; }
+    .floating-cloud-overlay { width: 140px; animation-duration: 8s; }
+    .dark-toggle { position: static; margin-bottom: 10px; display: inline-block; }
+    .header { text-align: center; }
 }
 </style>
 </head>
@@ -529,28 +509,25 @@ body.light-mode .location {
 
 <div class="container">
     <div class="header">
-        <div class="title">
-            Weather<span>Tiff</span>
+        <div class="fancy-title">
+            <span class="weather-part">Weather</span><span class="tiff-part">Tiff</span>
         </div>
         
-        <!-- CLOUD RUNNING ACROSS THE SUBTITLE -->
-        <div class="cloud-banner">
-            <svg class="cloud-runner" viewBox="0 0 120 60" fill="white">
-                <ellipse cx="50" cy="25" rx="22" ry="14" fill="white" opacity="0.9"/>
-                <ellipse cx="30" cy="32" rx="18" ry="11" fill="white" opacity="0.85"/>
-                <ellipse cx="70" cy="32" rx="18" ry="11" fill="white" opacity="0.85"/>
-                <ellipse cx="50" cy="35" rx="28" ry="10" fill="white" opacity="0.7"/>
-            </svg>
-            <svg class="cloud-runner-2" viewBox="0 0 90 45" fill="white">
-                <ellipse cx="38" cy="18" rx="16" ry="10" fill="white" opacity="0.7"/>
-                <ellipse cx="22" cy="24" rx="13" ry="8" fill="white" opacity="0.65"/>
-                <ellipse cx="54" cy="24" rx="13" ry="8" fill="white" opacity="0.65"/>
-            </svg>
+        <!-- SUBTITLE WITH CLOUD FLOATING ACROSS IT -->
+        <div class="subtitle-container">
+            <span class="premium-text">PREMIUM WEATHER INTELLIGENCE</span>
+            
+            <!-- Cloud floats ACROSS the text - opacity 60% -->
+            <div class="floating-cloud-overlay">
+                <svg class="cloud-svg" viewBox="0 0 200 100" fill="white">
+                    <ellipse cx="80" cy="40" rx="35" ry="20" fill="white"/>
+                    <ellipse cx="50" cy="50" rx="30" ry="18" fill="white"/>
+                    <ellipse cx="110" cy="50" rx="30" ry="18" fill="white"/>
+                    <ellipse cx="80" cy="55" rx="40" ry="15" fill="white"/>
+                </svg>
+            </div>
         </div>
         
-        <div class="subtitle">
-            PREMIUM WEATHER INTELLIGENCE
-        </div>
         <button class="dark-toggle" onclick="toggleDarkMode()">🌙 Dark</button>
     </div>
 
@@ -572,7 +549,6 @@ let savedLocs = [];
 let currentLoc = null;
 let notifOn = false;
 
-// Default Florida locations
 const defaultLocs = [
     { name: "Brooksville", lat: 28.555, lon: -82.387 },
     { name: "Tampa", lat: 27.9506, lon: -82.4572 },
@@ -623,7 +599,6 @@ function showToast(msg) {
     setTimeout(() => toast.remove(), 2500);
 }
 
-// Address search
 let searchTimeout;
 async function searchAddress(query) {
     const suggestionsDiv = document.getElementById('suggestions');
@@ -734,7 +709,6 @@ function enableNotifications() {
     if (notifOn && "Notification" in window) Notification.requestPermission();
 }
 
-// ========== RELOAD WINDY MAP ==========
 function refreshMap() {
     const mapFrame = document.getElementById('windyFrame');
     if (mapFrame) {
@@ -772,7 +746,6 @@ async function loadAllWeather() {
     let icon = iconMap[curr.weather_code] || "🌡️";
     let desc = descMap[curr.weather_code] || "Variable";
     
-    // Air Quality
     let aqi = "42", aqiLabel = "Good";
     if (airQuality?.current?.us_aqi) {
         aqi = airQuality.current.us_aqi;
@@ -783,7 +756,6 @@ async function loadAllWeather() {
     
     const pollen = ["Low", "Moderate", "High"][Math.floor(Math.random() * 3)];
     
-    // Alerts
     let alertsHtml = "";
     if (curr.weather_code >= 95) {
         alertsHtml = `<div class="alert-item alert-critical" onclick="showToast('⚠️ SEVERE THUNDERSTORM WARNING! Take cover.')"><div class="alert-title">⚠️ SEVERE THUNDERSTORM WARNING</div></div>`;
@@ -793,7 +765,6 @@ async function loadAllWeather() {
         alertsHtml = `<div class="no-alerts" onclick="showToast('✅ No active alerts')">✓ No severe weather alerts | Monitoring conditions</div>`;
     }
     
-    // Storms
     let stormsHtml = "";
     if (curr.weather_code >= 95) {
         stormsHtml = `<div class="storm-item" onclick="showToast('⛈️ Storm system detected nearby')"><div class="storm-name">⛈️ SEVERE THUNDERSTORM</div><div class="storm-info">Approaching from west • Moving NE at 35 mph</div></div>`;
@@ -801,7 +772,6 @@ async function loadAllWeather() {
         stormsHtml = `<div class="no-alerts" onclick="showToast('No storm threats detected')">No active storms detected | Real-time tracking enabled</div>`;
     }
     
-    // 7-day forecast
     let forecastHtml = "";
     const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
     for (let i = 0; i < 7; i++) {
@@ -818,7 +788,6 @@ async function loadAllWeather() {
         `;
     }
     
-    // Windy Radar Embed URL
     const windyUrl = `https://embed.windy.com/embed2.html?lat=${currentLoc.lat}&lon=${currentLoc.lon}&detailLat=${currentLoc.lat}&detailLon=${currentLoc.lon}&zoom=7&level=surface&overlay=radar&menu=&message=&marker=&calendar=&pressure=&type=map&location=coordinates&metricWind=mph&metricTemp=°F&radarRange=-1`;
     
     const fullHtml = `
@@ -886,14 +855,12 @@ async function loadAllWeather() {
     document.getElementById("weatherContent").innerHTML = fullHtml;
 }
 
-// Close suggestions on outside click
 document.addEventListener('click', function(e) {
     if (!e.target.closest('.locations-panel')) {
         document.getElementById('suggestions').style.display = 'none';
     }
 });
 
-// ========== INIT ==========
 loadFromStorage();
 loadAllWeather();
 setInterval(() => { if (currentLoc) loadAllWeather(); }, 600000);
