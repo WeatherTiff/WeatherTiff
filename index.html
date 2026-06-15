@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>WeatherTiff - Premium Weather Intelligence</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;800&family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
 
-<!-- Leaflet for Custom Map -->
+<!-- Leaflet for Map (fallback) -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
 
@@ -25,6 +25,7 @@ body {
     padding: 20px;
     min-height: 100vh;
     transition: background 0.3s ease;
+    overflow-x: hidden;
 }
 
 body.light-mode {
@@ -34,20 +35,12 @@ body.light-mode {
 
 body.light-mode .card {
     background: rgba(255,255,255,0.85);
-    backdrop-filter: blur(10px);
-    border-color: rgba(212,165,116,0.5);
 }
 
 body.light-mode .detail-value,
 body.light-mode .temp,
 body.light-mode .location {
     color: #1a1a2e;
-}
-
-body.light-mode .label,
-body.light-mode .day,
-body.light-mode .subtitle {
-    color: #8B4513;
 }
 
 .container {
@@ -57,32 +50,112 @@ body.light-mode .subtitle {
     z-index: 2;
 }
 
+/* HEADER WITH FLOATING CLOUD */
 .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
+    position: relative;
     margin-bottom: 25px;
-    flex-wrap: wrap;
-    gap: 10px;
+    min-height: 100px;
+}
+
+/* Floating Cloud Animation */
+.floating-cloud {
+    position: absolute;
+    top: -10px;
+    left: -30px;
+    width: 180px;
+    opacity: 0.7;
+    animation: floatCloud 20s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 10;
+}
+
+@keyframes floatCloud {
+    0% {
+        transform: translateX(0) translateY(0);
+    }
+    25% {
+        transform: translateX(20px) translateY(-5px);
+    }
+    50% {
+        transform: translateX(40px) translateY(0);
+    }
+    75% {
+        transform: translateX(20px) translateY(5px);
+    }
+    100% {
+        transform: translateX(0) translateY(0);
+    }
+}
+
+/* Second cloud slower */
+.floating-cloud-2 {
+    position: absolute;
+    top: 40px;
+    right: -20px;
+    width: 120px;
+    opacity: 0.5;
+    animation: floatCloud2 25s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 10;
+}
+
+@keyframes floatCloud2 {
+    0% {
+        transform: translateX(0) translateY(0);
+    }
+    25% {
+        transform: translateX(-15px) translateY(-3px);
+    }
+    50% {
+        transform: translateX(-30px) translateY(0);
+    }
+    75% {
+        transform: translateX(-15px) translateY(3px);
+    }
+    100% {
+        transform: translateX(0) translateY(0);
+    }
 }
 
 .title {
-    font-size: 52px;
+    font-size: 56px;
     font-family: 'Playfair Display', serif;
     font-weight: 800;
+    position: relative;
+    z-index: 20;
+    letter-spacing: -1px;
 }
 
+/* FANCY LUXURY TIFF - like your screenshot */
 .title span {
     color: #d4a574;
     font-style: italic;
-    font-weight: 400;
+    font-weight: 900;
+    font-family: 'Playfair Display', serif;
+    text-shadow: 2px 2px 8px rgba(212,165,116,0.3);
+    letter-spacing: 1px;
+    position: relative;
+    display: inline-block;
+}
+
+.title span::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #d4a574, transparent);
 }
 
 .subtitle {
-    letter-spacing: 3px;
+    letter-spacing: 4px;
     font-size: 10px;
-    margin-top: 5px;
+    margin-top: 12px;
     color: #cdb7ff;
+    font-weight: 600;
+    position: relative;
+    z-index: 20;
 }
 
 .dark-toggle {
@@ -94,6 +167,16 @@ body.light-mode .subtitle {
     cursor: pointer;
     color: #d4a574;
     font-weight: 600;
+    transition: all 0.3s;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 20;
+}
+
+.dark-toggle:hover {
+    background: #d4a574;
+    color: #1a2332;
 }
 
 .locations-panel {
@@ -206,6 +289,7 @@ body.light-mode .subtitle {
     color: #d4a574;
     letter-spacing: 1px;
     margin-bottom: 5px;
+    font-weight: 600;
 }
 
 .value {
@@ -220,18 +304,19 @@ body.light-mode .subtitle {
     margin-top: 15px;
 }
 
+/* Windy Radar Container */
 .radar {
     width: 100%;
-    height: 300px;
+    height: 320px;
     border-radius: 18px;
     overflow: hidden;
     border: 1px solid rgba(212,165,116,0.3);
 }
 
-#radarMap {
-    height: 100%;
+.radar iframe {
     width: 100%;
-    background: #1a1a2e;
+    height: 100%;
+    border: none;
 }
 
 .map-controls {
@@ -239,6 +324,7 @@ body.light-mode .subtitle {
     gap: 8px;
     margin-top: 12px;
     justify-content: center;
+    flex-wrap: wrap;
 }
 
 .map-btn {
@@ -250,6 +336,12 @@ body.light-mode .subtitle {
     font-weight: 600;
     cursor: pointer;
     color: #1a2332;
+    transition: all 0.2s;
+}
+
+.map-btn:hover {
+    transform: scale(1.02);
+    background: #e8b88f;
 }
 
 .forecast {
@@ -355,6 +447,11 @@ body.light-mode .subtitle {
     border-radius: 12px;
     text-align: center;
     cursor: pointer;
+    transition: all 0.2s;
+}
+
+.aqi-card:hover {
+    background: rgba(212,165,116,0.15);
 }
 
 .aqi-value {
@@ -373,6 +470,10 @@ body.light-mode .subtitle {
     font-weight: 800;
     cursor: pointer;
     transition: all 0.3s;
+}
+
+.notification-btn:hover {
+    transform: scale(1.01);
 }
 
 .notification-btn.enabled {
@@ -406,6 +507,27 @@ body.light-mode .subtitle {
     color: #d4a574;
 }
 
+.suggestions-dropdown {
+    margin-top: 8px;
+    max-height: 150px;
+    overflow-y: auto;
+    background: rgba(0,0,0,0.9);
+    border-radius: 12px;
+    display: none;
+}
+
+.suggestion-item {
+    padding: 10px 15px;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(212,165,116,0.2);
+    color: #d4a574;
+    font-size: 12px;
+}
+
+.suggestion-item:hover {
+    background: rgba(212,165,116,0.2);
+}
+
 @media (max-width: 600px) {
     .title { font-size: 42px; }
     .location { font-size: 32px; }
@@ -413,6 +535,10 @@ body.light-mode .subtitle {
     .forecast { gap: 4px; }
     .day-card { padding: 8px 3px; }
     .details { grid-template-columns: repeat(2, 1fr); }
+    .floating-cloud { width: 120px; top: -5px; left: -20px; }
+    .floating-cloud-2 { width: 80px; top: 30px; right: -10px; }
+    .dark-toggle { position: static; margin-bottom: 10px; }
+    .header { display: flex; flex-direction: column; }
 }
 </style>
 </head>
@@ -420,9 +546,25 @@ body.light-mode .subtitle {
 
 <div class="container">
     <div class="header">
-        <div>
-            <div class="title">Weather<span>Tiff</span></div>
-            <div class="subtitle">PREMIUM WEATHER INTELLIGENCE</div>
+        <!-- Floating Clouds - Back by popular demand! -->
+        <svg class="floating-cloud" viewBox="0 0 200 100" fill="white">
+            <ellipse cx="80" cy="40" rx="35" ry="20" fill="white" opacity="0.9"/>
+            <ellipse cx="50" cy="50" rx="30" ry="18" fill="white" opacity="0.85"/>
+            <ellipse cx="110" cy="50" rx="30" ry="18" fill="white" opacity="0.85"/>
+            <ellipse cx="80" cy="55" rx="40" ry="15" fill="white" opacity="0.7"/>
+        </svg>
+        
+        <svg class="floating-cloud-2" viewBox="0 0 150 80" fill="white">
+            <ellipse cx="60" cy="30" rx="25" ry="15" fill="white" opacity="0.7"/>
+            <ellipse cx="40" cy="38" rx="20" ry="12" fill="white" opacity="0.65"/>
+            <ellipse cx="80" cy="38" rx="22" ry="13" fill="white" opacity="0.65"/>
+        </svg>
+
+        <div class="title">
+            Weather<span>Tiff</span>
+        </div>
+        <div class="subtitle">
+            PREMIUM WEATHER INTELLIGENCE
         </div>
         <button class="dark-toggle" onclick="toggleDarkMode()">🌙 Dark</button>
     </div>
@@ -430,8 +572,8 @@ body.light-mode .subtitle {
     <div class="locations-panel">
         <div class="locations-title">📍 MY LOCATIONS</div>
         <div class="locations-buttons" id="locationBtns"></div>
-        <input type="text" id="addressInput" class="address-input" placeholder="Enter address or city..." onkeypress="handleAddressKeypress(event)">
-        <div id="suggestions" style="margin-top:8px; max-height:150px; overflow-y:auto; display:none;"></div>
+        <input type="text" id="addressInput" class="address-input" placeholder="Enter address or city..." onkeyup="searchAddress(this.value)" onkeypress="handleAddressKeypress(event)">
+        <div id="suggestions" class="suggestions-dropdown"></div>
     </div>
 
     <div id="weatherContent">
@@ -443,11 +585,7 @@ body.light-mode .subtitle {
 // ========== STORAGE & LOCATIONS ==========
 let savedLocs = [];
 let currentLoc = null;
-let stormActive = false;
-let weatherMap = null;
-let mapLayerType = "standard";
 let notifOn = false;
-let forecastChart = null;
 
 // Default Florida locations
 const defaultLocs = [
@@ -500,26 +638,32 @@ function showToast(msg) {
     setTimeout(() => toast.remove(), 2500);
 }
 
-// Address search using Nominatim
+// Address search
+let searchTimeout;
 async function searchAddress(query) {
+    const suggestionsDiv = document.getElementById('suggestions');
     if (!query || query.length < 3) {
-        document.getElementById('suggestions').style.display = 'none';
+        suggestionsDiv.style.display = 'none';
         return;
     }
-    try {
-        const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=5&countrycodes=us`;
-        const response = await fetch(url, { headers: { 'User-Agent': 'WeatherTiff/1.0' } });
-        const data = await response.json();
-        if (data.length > 0) {
-            const suggestionsDiv = document.getElementById('suggestions');
-            suggestionsDiv.innerHTML = data.map(item => `
-                <div style="padding:8px 12px; background:rgba(0,0,0,0.8); border-radius:8px; margin-bottom:4px; cursor:pointer; color:#d4a574;" onclick="selectAddress(${item.lat}, ${item.lon}, '${item.display_name.replace(/'/g, "\\'")}')">
-                    📍 ${item.display_name.substring(0, 60)}
-                </div>
-            `).join('');
-            suggestionsDiv.style.display = 'block';
-        }
-    } catch(e) { console.log(e); }
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(async () => {
+        try {
+            const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=5&countrycodes=us`;
+            const response = await fetch(url, { headers: { 'User-Agent': 'WeatherTiff/1.0' } });
+            const data = await response.json();
+            if (data.length > 0) {
+                suggestionsDiv.innerHTML = data.map(item => `
+                    <div class="suggestion-item" onclick="selectAddress(${item.lat}, ${item.lon}, '${item.display_name.replace(/'/g, "\\'")}')">
+                        📍 ${item.display_name.substring(0, 60)}
+                    </div>
+                `).join('');
+                suggestionsDiv.style.display = 'block';
+            } else {
+                suggestionsDiv.style.display = 'none';
+            }
+        } catch(e) { suggestionsDiv.style.display = 'none'; }
+    }, 500);
 }
 
 function selectAddress(lat, lon, name) {
@@ -533,15 +677,20 @@ function selectAddress(lat, lon, name) {
         showToast(`✅ Added ${newLoc.name}`);
         currentLoc = newLoc;
         loadAllWeather();
-        if (weatherMap) weatherMap.setView([currentLoc.lat, currentLoc.lon], 8);
+    } else {
+        showToast(`📍 ${newLoc.name} already in list`);
     }
 }
 
 function handleAddressKeypress(e) {
-    if (e.key === 'Enter') searchAndAdd(e.target.value);
+    if (e.key === 'Enter') {
+        document.getElementById('suggestions').style.display = 'none';
+        const query = e.target.value;
+        if (query) quickAddAddress(query);
+    }
 }
 
-async function searchAndAdd(query) {
+async function quickAddAddress(query) {
     try {
         const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1&countrycodes=us`;
         const response = await fetch(url, { headers: { 'User-Agent': 'WeatherTiff/1.0' } });
@@ -582,48 +731,6 @@ async function getAirQuality() {
     } catch(e) { return null; }
 }
 
-// ========== MAP with RainViewer Radar ==========
-function initMap() {
-    if (weatherMap) weatherMap.remove();
-    weatherMap = L.map("radarMap").setView([currentLoc.lat, currentLoc.lon], 7);
-    updateMapLayer();
-    weatherMap.on("click", (e) => showToast(`📍 ${e.latlng.lat.toFixed(3)}, ${e.latlng.lng.toFixed(3)}`));
-}
-
-function updateMapLayer() {
-    if (!weatherMap) return;
-    weatherMap.eachLayer(layer => { if (layer instanceof L.TileLayer) weatherMap.removeLayer(layer); });
-    
-    let tileUrl;
-    if (mapLayerType === "satellite") {
-        tileUrl = "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
-    } else if (mapLayerType === "radar") {
-        // RainViewer Radar Tiles
-        tileUrl = "https://tilecache.rainviewer.com/v2/radar/nowcast/{z}/{x}/{y}/2/1_1.png";
-    } else {
-        tileUrl = "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png";
-    }
-    
-    L.tileLayer(tileUrl, { attribution: "© WeatherTiff", maxZoom: 12, subdomains: 'abcd' }).addTo(weatherMap);
-    
-    // Add marker for current location
-    L.marker([currentLoc.lat, currentLoc.lon])
-        .addTo(weatherMap)
-        .bindPopup(`<b>${currentLoc.name}</b><br>📍 Current Location`)
-        .openPopup();
-}
-
-function mapZoomIn() { weatherMap?.zoomIn(); showToast("🔍 Zooming in"); }
-function mapZoomOut() { weatherMap?.zoomOut(); showToast("🔍 Zooming out"); }
-function cycleMapLayer() {
-    if (mapLayerType === "standard") mapLayerType = "satellite";
-    else if (mapLayerType === "satellite") mapLayerType = "radar";
-    else mapLayerType = "standard";
-    updateMapLayer();
-    showToast(`🗺️ ${mapLayerType} view`);
-}
-function refreshMap() { initMap(); showToast("🔄 Map refreshed"); }
-
 // ========== DARK MODE ==========
 function toggleDarkMode() {
     document.body.classList.toggle("light-mode");
@@ -640,6 +747,15 @@ function enableNotifications() {
         btn.classList.toggle("enabled");
     }
     if (notifOn && "Notification" in window) Notification.requestPermission();
+}
+
+// ========== RELOAD WINDY MAP ==========
+function refreshMap() {
+    const mapFrame = document.getElementById('windyFrame');
+    if (mapFrame) {
+        mapFrame.src = mapFrame.src;
+        showToast("🔄 Radar refreshed");
+    }
 }
 
 // ========== RENDER UI ==========
@@ -661,10 +777,8 @@ async function loadAllWeather() {
     const curr = weather.current;
     const daily = weather.daily;
     
-    // Get real times
     let sunrise = daily.sunrise?.[0]?.split("T")[1]?.slice(0,5) || "6:42 AM";
     let sunset = daily.sunset?.[0]?.split("T")[1]?.slice(0,5) || "8:31 PM";
-    
     let uv = curr.uv_index ? Math.round(curr.uv_index) : 5;
     let temp = Math.round(curr.temperature_2m);
     let feels = Math.round(curr.apparent_temperature);
@@ -682,7 +796,6 @@ async function loadAllWeather() {
         else aqiLabel = "Unhealthy";
     }
     
-    // Pollen (simulated until API available)
     const pollen = ["Low", "Moderate", "High"][Math.floor(Math.random() * 3)];
     
     // Alerts
@@ -720,6 +833,9 @@ async function loadAllWeather() {
         `;
     }
     
+    // Windy Radar Embed URL
+    const windyUrl = `https://embed.windy.com/embed2.html?lat=${currentLoc.lat}&lon=${currentLoc.lon}&detailLat=${currentLoc.lat}&detailLon=${currentLoc.lon}&zoom=7&level=surface&overlay=radar&menu=&message=&marker=&calendar=&pressure=&type=map&location=coordinates&metricWind=mph&metricTemp=°F&radarRange=-1`;
+    
     const fullHtml = `
         <div class="card">
             <div class="location">${currentLoc.name}</div>
@@ -738,13 +854,13 @@ async function loadAllWeather() {
         </div>
         
         <div class="card">
-            <div class="label" style="margin-bottom:12px;">🗺️ LIVE RADAR & SATELLITE</div>
-            <div class="radar"><div id="radarMap"></div></div>
+            <div class="label" style="margin-bottom:12px;">🗺️ LIVE WINDY RADAR MAP</div>
+            <div class="radar">
+                <iframe id="windyFrame" src="${windyUrl}" loading="lazy"></iframe>
+            </div>
             <div class="map-controls">
-                <button class="map-btn" onclick="mapZoomIn()">🔍 Zoom In</button>
-                <button class="map-btn" onclick="mapZoomOut()">🔍 Zoom Out</button>
-                <button class="map-btn" onclick="cycleMapLayer()">🛰️ Layer</button>
-                <button class="map-btn" onclick="refreshMap()">🔄 Refresh</button>
+                <button class="map-btn" onclick="refreshMap()">🔄 Refresh Radar</button>
+                <button class="map-btn" onclick="window.open('${windyUrl}', '_blank')">🗺️ Full Screen</button>
             </div>
         </div>
         
@@ -783,19 +899,19 @@ async function loadAllWeather() {
     `;
     
     document.getElementById("weatherContent").innerHTML = fullHtml;
-    initMap();
 }
 
-// ========== INIT ==========
-loadFromStorage();
-loadAllWeather();
-setInterval(() => { if (currentLoc) loadAllWeather(); }, 600000);
-
+// Close suggestions on outside click
 document.addEventListener('click', function(e) {
     if (!e.target.closest('.locations-panel')) {
         document.getElementById('suggestions').style.display = 'none';
     }
 });
+
+// ========== INIT ==========
+loadFromStorage();
+loadAllWeather();
+setInterval(() => { if (currentLoc) loadAllWeather(); }, 600000);
 </script>
 </body>
 </html>
