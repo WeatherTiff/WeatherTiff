@@ -223,7 +223,86 @@ body.light-mode .location {
     <button onclick="findMyLocation()" style="flex: 1; background: #d4a574; color: #1a2332; border: none; border-radius: 30px; padding: 10px; font-weight: 700; cursor: pointer;">📍 Find My Location</button>
     <button onclick="clearAllLocations()" style="flex: 0.5; background: rgba(230,76,76,0.3); color: #ff8888; border: 1px solid #ff4444; border-radius: 30px; padding: 10px; font-weight: 700; cursor: pointer;">🗑️ Clear</button>
 </div>
+// ========== FIND MY LOCATION (GPS) ==========
+function findMyLocation() {
+    showToast("📍 Fetching your location...");
+    
+    if (!navigator.geolocation) {
+        showToast("❌ Geolocation not supported by your browser");
+        return;
     }
+    
+    navigator.geolocation.getCurrentPosition(
+        async (position) => {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+            
+            // Reverse geocode to get city name
+            try {
+                const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`;
+                const response = await fetch(url, { headers: { 'User-Agent': 'WeatherTiff/1.0' } });
+                const data = await response.json();
+                
+                let cityName = data.address?.city || data.address?.town || data.address?.village || "Current Location";
+                
+                const newLoc = { name: cityName, lat: lat, lon: lon };
+                
+                if (!savedLocs.some(l => l.name === cityName && Math.abs(l.lat - lat) < 0.1)) {
+                    savedLocs.unshift(newLoc);
+                    saveToStorage();
+                    updateLocationButtons();
+                    showToast(`✅ Added ${cityName}`);
+                    currentLoc = newLoc;
+                    loadAllWeather();
+                    if (weatherMap) weatherMap.setView([lat, lon], 12);
+                } else {
+                    showToast(`📍 ${cityName} already in your list`);
+                    currentLoc = savedLocs.find(l => l.name === cityName);
+                    loadAllWeather();
+                    updateLocationButtons();
+                }
+            } catch(e) {
+                // Fallback if reverse geocoding fails
+                const newLoc = { name: "My Location", lat: lat, lon: lon };
+                savedLocs.unshift(newLoc);
+                saveToStorage();
+                updateLocationButtons();
+                showToast(`✅ Added My Location`);
+                currentLoc = newLoc;
+                loadAllWeather();
+                if (weatherMap) weatherMap.setView([lat, lon], 12);
+            }
+        },
+        (error) => {
+            let errorMsg = "❌ Location error: ";
+            switch(error.code) {
+                case error.PERMISSION_DENIED: errorMsg += "Permission denied"; break;
+                case error.POSITION_UNAVAILABLE: errorMsg += "Position unavailable"; break;
+                case error.TIMEOUT: errorMsg += "Timeout"; break;
+                default: errorMsg += "Unknown error";
+            }
+            showToast(errorMsg);
+        },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+    );
+}
+
+// ========== CLEAR ALL LOCATIONS ==========
+function clearAllLocations() {
+    if (confirm("⚠️ Remove all saved locations? You can re-add them later.")) {
+        savedLocs = [];
+        saveToStorage();
+        
+        // Re-add default Florida locations
+        savedLocs = [...defaultLocs];
+        currentLoc = savedLocs[0];
+        saveToStorage();
+        
+        updateLocationButtons();
+        loadAllWeather();
+        showToast("🗑️ Locations reset to defaults");
+    }
+                }    }
     
 .card {
     background: rgba(255,255,255,0.07);
