@@ -78,31 +78,34 @@ body.light-mode .location {
 }
 
 /* CLOUD RUNNING ACROSS PREMIUM WEATHER INTELLIGENCE */
-.subtitle-wrap{
-    position:relative;
-    height:30px;
-    margin-top:6px;
+.cloud-banner {
+    position: relative;
+    height: 40px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    overflow: hidden;
 }
 
-.cloud-runner{
-    position:absolute;
-    width:90px;
-    height:45px;
-    top:-10px;
-    left:-100px;
-    opacity:.60;
-    animation:cloudAcross 18s linear infinite;
-    filter:blur(.4px);
-    z-index:2;
+.cloud-runner {
+    position: absolute;
+    width: 100px;
+    height: 40px;
+    left: -120px;
+    top: -8px;
+    opacity: 0.75;
+    animation: cloudAcross 14s linear infinite;
+    z-index: 5;
+    pointer-events: none;
 }
 
-@keyframes cloudAcross{
-    from{
-        transform:translateX(-120px);
+@keyframes cloudAcross {
+    0% {
+        left: -120px;
     }
-    to{
-        transform:translateX(calc(100vw + 150px));
+    100% {
+        left: 100%;
     }
+}
 
 
 .subtitle {
