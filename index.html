@@ -76,53 +76,26 @@ body.light-mode .location {
     font-size: 1.1em;
 }
 
-/* CLOUD RUNNING ACROSS THE TOP OF PREMIUM WEATHER INTELLIGENCE */
-.cloud-banner {
-    position: relative;
-    height: 40px;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    overflow: hidden;
+.cloud-banner{
+    position:relative;
+    height:32px;
+    overflow:hidden;
+    margin:4px 0;
+}
 }
 
-.cloud-runner {
-    position: absolute;
-    width: 100px;
-    height: 40px;
-    left: -120px;
-    top: -8px;
-    opacity: 0.75;
-    animation: cloudAcross 14s linear infinite;
-    z-index: 5;
-    pointer-events: none;
+.cloud-runner{
+    position:absolute;
+    width:90px;
+    height:36px;
+    left:-120px;
+    top:-4px;
+    opacity:.8;
+    animation:cloudAcross 18s linear infinite;
 }
-
 @keyframes cloudAcross {
     0% {
         left: -120px;
-    }
-    100% {
-        left: 100%;
-    }
-}
-
-/* Second cloud slower */
-.cloud-runner-2 {
-    position: absolute;
-    width: 70px;
-    height: 30px;
-    left: -90px;
-    top: 5px;
-    opacity: 0.5;
-    animation: cloudAcross2 22s linear infinite;
-    z-index: 5;
-    pointer-events: none;
-    animation-delay: 7s;
-}
-
-@keyframes cloudAcross2 {
-    0% {
-        left: -90px;
     }
     100% {
         left: 100%;
