@@ -57,18 +57,65 @@ body.light-mode .location {
     min-height: 100px;
 }
 
-<div class="cloud-banner">
-    <svg class="cloud-runner" viewBox="0 0 120 60">
-        <ellipse cx="50" cy="25" rx="22" ry="14" fill="white"/>
-        <ellipse cx="30" cy="32" rx="18" ry="11" fill="white"/>
-        <ellipse cx="70" cy="32" rx="18" ry="11" fill="white"/>
-        <ellipse cx="50" cy="35" rx="28" ry="10" fill="white"/>
-    </svg>
-</div>
+/* Floating Cloud Animation */
+.floating-cloud {
+    position: absolute;
+    top: -10px;
+    left: -30px;
+    width: 180px;
+    opacity: 0.7;
+    animation: floatCloud 20s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 10;
+}
 
-<div class="subtitle">
-    PREMIUM WEATHER INTELLIGENCE
-</div>
+@keyframes floatCloud {
+    0% {
+        transform: translateX(0) translateY(0);
+    }
+    25% {
+        transform: translateX(20px) translateY(-5px);
+    }
+    50% {
+        transform: translateX(40px) translateY(0);
+    }
+    75% {
+        transform: translateX(20px) translateY(5px);
+    }
+    100% {
+        transform: translateX(0) translateY(0);
+    }
+}
+
+/* Second cloud slower */
+.floating-cloud-2 {
+    position: absolute;
+    top: 40px;
+    right: -20px;
+    width: 120px;
+    opacity: 0.5;
+    animation: floatCloud2 25s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 10;
+}
+
+@keyframes floatCloud2 {
+    0% {
+        transform: translateX(0) translateY(0);
+    }
+    25% {
+        transform: translateX(-15px) translateY(-3px);
+    }
+    50% {
+        transform: translateX(-30px) translateY(0);
+    }
+    75% {
+        transform: translateX(-15px) translateY(3px);
+    }
+    100% {
+        transform: translateX(0) translateY(0);
+    }
+}
 
 .title {
     font-size: 56px;
@@ -78,28 +125,7 @@ body.light-mode .location {
     z-index: 20;
     letter-spacing: -1px;
 }
-.cloud-banner{
-    position:relative;
-    height:32px;
-    overflow:hidden;
-    margin:4px 0;
-}
 
-.cloud-runner{
-    position:absolute;
-    width:90px;
-    height:36px;
-    left:-120px;
-    top:-4px;
-    opacity:.8;
-    animation:cloudAcross 18s linear infinite;
-}
-
-@keyframes cloudAcross{
-    0%{left:-120px;}
-    100%{left:100%;}
-}
-    
 /* FANCY LUXURY TIFF - like your screenshot */
 .title span {
     color: #d4a574;
