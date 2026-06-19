@@ -1,917 +1,503 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
 <title>WeatherTiff - Premium Weather Intelligence</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Open+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
-
-<!-- Leaflet for Map (fallback) -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Open+Sans:wght@400;600;700;800&family=Great+Vibes&display=swap" rel="stylesheet">
 
 <style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: 'Open Sans', sans-serif;
-    background: linear-gradient(135deg, #1a0a2e 0%, #2d1b4e 35%, #3d2a5f 70%, #2d1b4e 100%);
-    color: white;
-    padding: 20px;
-    min-height: 100vh;
-    transition: background 0.3s ease;
-    overflow-x: hidden;
-}
-
-body.light-mode {
-    background: linear-gradient(135deg, #e8d5f5 0%, #d4c4e8 100%);
-    color: #1a1a2e;
-}
-
-body.light-mode .card {
-    background: rgba(255,255,255,0.85);
-}
-
-body.light-mode .detail-value,
-body.light-mode .temp,
-body.light-mode .location {
-    color: #1a1a2e;
-}
-
-.container {
-    max-width: 700px;
-    margin: auto;
-    position: relative;
-    z-index: 2;
-}
-
-/* HEADER WITH FLOATING CLOUD */
-.header {
-    position: relative;
-    margin-bottom: 25px;
-    min-height: 100px;
-}
-
-/* Floating Cloud Animation */
-.floating-cloud {
-    position: absolute;
-    top: -10px;
-    left: -30px;
-    width: 180px;
-    opacity: 0.7;
-    animation: floatCloud 20s ease-in-out infinite;
-    pointer-events: none;
-    z-index: 10;
-}
-
-@keyframes floatCloud {
-    0% {
-        transform: translateX(0) translateY(0);
-    }
-    25% {
-        transform: translateX(20px) translateY(-5px);
-    }
-    50% {
-        transform: translateX(40px) translateY(0);
-    }
-    75% {
-        transform: translateX(20px) translateY(5px);
-    }
-    100% {
-        transform: translateX(0) translateY(0);
-    }
-}
-
-/* Second cloud slower */
-.floating-cloud-2 {
-    position: absolute;
-    top: 40px;
-    right: -20px;
-    width: 120px;
-    opacity: 0.5;
-    animation: floatCloud2 25s ease-in-out infinite;
-    pointer-events: none;
-    z-index: 10;
-}
-
-@keyframes floatCloud2 {
-    0% {
-        transform: translateX(0) translateY(0);
-    }
-    25% {
-        transform: translateX(-15px) translateY(-3px);
-    }
-    50% {
-        transform: translateX(-30px) translateY(0);
-    }
-    75% {
-        transform: translateX(-15px) translateY(3px);
-    }
-    100% {
-        transform: translateX(0) translateY(0);
-    }
-}
-
-.title {
-    font-size: 56px;
-    font-family: 'Playfair Display', serif;
-    font-weight: 800;
-    position: relative;
-    z-index: 20;
-    letter-spacing: -1px;
-}
-
-/* FANCY LUXURY TIFF - like your screenshot */
-.title span {
-    color: #d4a574;
-    font-style: italic;
-    font-weight: 900;
-    font-family: 'Playfair Display', serif;
-    text-shadow: 2px 2px 8px rgba(212,165,116,0.3);
-    letter-spacing: 1px;
-    position: relative;
-    display: inline-block;
-}
-
-.title span::after {
-    content: '';
-    position: absolute;
-    bottom: -5px;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, #d4a574, transparent);
-}
-
-.subtitle {
-    letter-spacing: 4px;
-    font-size: 10px;
-    margin-top: 12px;
-    color: #cdb7ff;
-    font-weight: 600;
-    position: relative;
-    z-index: 20;
-}
-
-.dark-toggle {
-    background: rgba(212,165,116,0.2);
-    border: 1px solid #d4a574;
-    border-radius: 30px;
-    padding: 8px 18px;
-    font-size: 12px;
-    cursor: pointer;
-    color: #d4a574;
-    font-weight: 600;
-    transition: all 0.3s;
-    position: absolute;
-    top: 0;
-    right: 0;
-    z-index: 20;
-}
-
-.dark-toggle:hover {
-    background: #d4a574;
-    color: #1a2332;
-}
-
-.locations-panel {
-    background: rgba(255,255,255,0.08);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(212,165,116,0.3);
-    border-radius: 20px;
-    padding: 16px;
-    margin-bottom: 18px;
-}
-
-.locations-title {
-    font-size: 12px;
-    color: #d4a574;
-    margin-bottom: 12px;
-    font-weight: 700;
-    letter-spacing: 1px;
-}
-
-.locations-buttons {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    margin-bottom: 12px;
-}
-
-.loc-btn {
-    padding: 8px 16px;
-    border-radius: 25px;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.loc-btn.active {
-    background: #d4a574;
-    color: #1a2332;
-    border: none;
-}
-
-.loc-btn.inactive {
-    background: transparent;
-    border: 1px solid #d4a574;
-    color: #d4a574;
-}
 
-.address-input {
-    width: 100%;
-    padding: 10px 16px;
-    border-radius: 40px;
-    border: 1px solid rgba(212,165,116,0.5);
-    background: rgba(255,255,255,0.1);
-    color: white;
-    font-size: 13px;
-}
-
-.address-input::placeholder {
-    color: rgba(212,165,116,0.6);
-}
-
-.card {
-    background: rgba(255,255,255,0.07);
-    backdrop-filter: blur(18px);
-    border: 1px solid rgba(212,165,116,0.25);
-    border-radius: 24px;
-    padding: 24px;
-    margin-bottom: 18px;
-    transition: all 0.3s;
-}
-
-.card:hover {
-    border-color: #d4a574;
-    transform: translateY(-2px);
-}
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:'Open Sans',sans-serif;
+background:linear-gradient(135deg,#14071f 0%,#24123d 40%,#372257 70%,#22143d 100%);
+color:#fff;
+min-height:100vh;
+padding:20px;
+overflow-x:hidden;
+}
 
-.location {
-    font-size: 38px;
-    font-family: 'Playfair Display', serif;
-    font-weight: 800;
-}
-
-.temp {
-    font-size: 78px;
-    font-family: 'Playfair Display', serif;
-    font-weight: 800;
-    line-height: 1;
-}
+.container{
+max-width:760px;
+margin:auto;
+}
+
+.header{
+position:relative;
+margin-bottom:25px;
+padding-top:20px;
+overflow:hidden;
+}
 
-.condition {
-    margin-top: 6px;
-    color: #dfeeff;
+.floating-cloud{
+position:absolute;
+top:55px;
+left:-180px;
+font-size:90px;
+opacity:.75;
+pointer-events:none;
+animation:cloudDrift 22s linear infinite;
+z-index:1;
 }
 
-.details {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-    margin-top: 20px;
-    padding-top: 20px;
-    border-top: 1px solid rgba(212,165,116,0.2);
-}
+@keyframes cloudDrift{
+0%{transform:translateX(0);}
+100%{transform:translateX(950px);}
+}
+
+.title{
+font-size:62px;
+font-weight:800;
+font-family:'Playfair Display',serif;
+position:relative;
+z-index:5;
+letter-spacing:-2px;
+}
+
+.title span{
+font-family:'Great Vibes',cursive;
+font-size:1.2em;
+color:#d4a574;
+font-weight:400;
+text-shadow:0 0 20px rgba(212,165,116,.4);
+}
 
-.detail {
-    text-align: center;
+.subtitle{
+letter-spacing:5px;
+font-size:11px;
+margin-top:6px;
+color:#ceb7ff;
+position:relative;
+z-index:5;
 }
 
-.label {
-    font-size: 10px;
-    color: #d4a574;
-    letter-spacing: 1px;
-    margin-bottom: 5px;
-    font-weight: 600;
+.dark-toggle{
+position:absolute;
+right:0;
+top:10px;
+border:none;
+border-radius:30px;
+padding:10px 18px;
+background:rgba(212,165,116,.18);
+color:#d4a574;
+cursor:pointer;
+font-weight:700;
+backdrop-filter:blur(20px);
 }
 
-.value {
-    font-size: 15px;
-    font-weight: 700;
+.glass{
+background:rgba(255,255,255,.08);
+backdrop-filter:blur(24px);
+-webkit-backdrop-filter:blur(24px);
+border:1px solid rgba(255,255,255,.12);
+box-shadow:
+0 8px 32px rgba(0,0,0,.25),
+inset 0 1px 0 rgba(255,255,255,.08);
+border-radius:24px;
 }
 
-.extended-details {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-    margin-top: 15px;
+.locations-panel{
+padding:18px;
+margin-bottom:18px;
 }
 
-/* Windy Radar Container */
-.radar {
-    width: 100%;
-    height: 320px;
-    border-radius: 18px;
-    overflow: hidden;
-    border: 1px solid rgba(212,165,116,0.3);
+.locations-title{
+font-size:12px;
+font-weight:700;
+letter-spacing:2px;
+margin-bottom:12px;
+color:#d4a574;
 }
 
-.radar iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
+.locations-buttons{
+display:flex;
+flex-wrap:wrap;
+gap:8px;
+margin-bottom:12px;
 }
 
-.map-controls {
-    display: flex;
-    gap: 8px;
-    margin-top: 12px;
-    justify-content: center;
-    flex-wrap: wrap;
+.loc-btn{
+padding:8px 16px;
+border-radius:30px;
+cursor:pointer;
+font-weight:700;
+border:none;
 }
 
-.map-btn {
-    background: #d4a574;
-    border: none;
-    border-radius: 20px;
-    padding: 6px 14px;
-    font-size: 11px;
-    font-weight: 600;
-    cursor: pointer;
-    color: #1a2332;
-    transition: all 0.2s;
+.loc-btn.active{
+background:#d4a574;
+color:#1a2332;
 }
 
-.map-btn:hover {
-    transform: scale(1.02);
-    background: #e8b88f;
+.loc-btn.inactive{
+background:transparent;
+color:#d4a574;
+border:1px solid #d4a574;
 }
 
-.forecast {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 8px;
-    margin-top: 15px;
+.address-input{
+width:100%;
+padding:14px;
+border-radius:40px;
+border:1px solid rgba(212,165,116,.4);
+background:rgba(255,255,255,.08);
+color:white;
+outline:none;
+margin-bottom:10px;
 }
 
-.day-card {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(212,165,116,0.2);
-    padding: 10px 5px;
-    border-radius: 12px;
-    text-align: center;
-    cursor: pointer;
-    transition: 0.25s;
+.gps-btn{
+width:100%;
+padding:14px;
+border:none;
+border-radius:40px;
+background:#d4a574;
+color:#1a2332;
+font-weight:800;
+cursor:pointer;
 }
 
-.day-card:hover {
-    transform: translateY(-3px);
-    background: rgba(212,165,116,0.15);
+.card{
+padding:24px;
+margin-bottom:18px;
 }
 
-.day-card.active {
-    border: 2px solid #d4a574;
-    background: rgba(212,165,116,0.2);
+.location{
+font-size:40px;
+font-family:'Playfair Display',serif;
+font-weight:800;
 }
 
-.day {
-    font-size: 11px;
-    color: #d4a574;
-    margin-bottom: 5px;
-    font-weight: 600;
+.temp{
+font-size:88px;
+line-height:1;
+font-family:'Playfair Display',serif;
+font-weight:900;
 }
 
-.icon {
-    font-size: 24px;
+.condition{
+margin-top:6px;
+color:#dfeeff;
 }
 
-.high {
-    font-weight: 700;
-    font-size: 14px;
+.details{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:12px;
+margin-top:20px;
+padding-top:20px;
+border-top:1px solid rgba(255,255,255,.1);
 }
 
-.low {
-    font-size: 11px;
-    color: #bcbcbc;
+.detail{
+text-align:center;
 }
 
-.alert-item, .storm-item {
-    background: rgba(212,165,116,0.1);
-    border-left: 4px solid #d4a574;
-    border-radius: 12px;
-    padding: 14px;
-    margin-bottom: 8px;
-    cursor: pointer;
-    transition: all 0.2s;
+.label{
+font-size:10px;
+letter-spacing:1px;
+color:#d4a574;
+font-weight:700;
+margin-bottom:5px;
 }
 
-.alert-item:hover, .storm-item:hover {
-    background: rgba(212,165,116,0.2);
-    transform: translateX(5px);
+.value{
+font-size:15px;
+font-weight:700;
 }
 
-.alert-critical {
-    background: rgba(230,76,76,0.15);
-    border-left-color: #e64c4c;
+.radar{
+height:350px;
+overflow:hidden;
+border-radius:20px;
+border:1px solid rgba(255,255,255,.12);
 }
 
-.alert-title {
-    font-size: 12px;
-    font-weight: 700;
-    color: #d4a574;
+.radar iframe{
+width:100%;
+height:100%;
+border:none;
 }
 
-.alert-critical .alert-title {
-    color: #ff8888;
+.forecast{
+display:grid;
+grid-template-columns:repeat(7,1fr);
+gap:8px;
+margin-top:15px;
 }
 
-.no-alerts {
-    text-align: center;
-    color: #aaa;
-    padding: 20px;
-    font-size: 13px;
+.day-card{
+padding:12px 6px;
+border-radius:14px;
+text-align:center;
+background:rgba(255,255,255,.05);
+border:1px solid rgba(255,255,255,.08);
 }
 
-.storm-name {
-    font-size: 13px;
-    font-weight: 700;
-    color: #ff8c42;
+.day{
+font-size:11px;
+color:#d4a574;
+font-weight:700;
 }
 
-.aqi-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
+.icon{
+font-size:24px;
+margin:5px 0;
 }
 
-.aqi-card {
-    background: rgba(255,255,255,0.05);
-    padding: 12px;
-    border-radius: 12px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.2s;
+.high{
+font-weight:700;
 }
 
-.aqi-card:hover {
-    background: rgba(212,165,116,0.15);
+.low{
+font-size:11px;
+opacity:.75;
 }
 
-.aqi-value {
-    font-size: 20px;
-    font-weight: 700;
-    color: #7fb069;
+#weatherContent{
+margin-top:18px;
 }
 
-.notification-btn {
-    width: 100%;
-    padding: 14px;
-    background: #d4a574;
-    color: #1a2332;
-    border: none;
-    border-radius: 40px;
-    font-weight: 800;
-    cursor: pointer;
-    transition: all 0.3s;
+.loading{
+text-align:center;
+padding:70px;
+color:#d4a574;
 }
 
-.notification-btn:hover {
-    transform: scale(1.01);
+.toast{
+position:fixed;
+left:20px;
+right:20px;
+bottom:20px;
+padding:14px;
+background:#d4a574;
+color:#1a2332;
+font-weight:700;
+border-radius:40px;
+text-align:center;
+z-index:9999;
 }
 
-.notification-btn.enabled {
-    background: #2ecc71;
-    color: white;
-}
+@media(max-width:600px){
 
-.toast {
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-    right: 20px;
-    background: #d4a574;
-    color: #1a2332;
-    padding: 12px 20px;
-    border-radius: 30px;
-    text-align: center;
-    font-weight: 600;
-    z-index: 1000;
-    animation: slideUp 0.3s ease;
+.title{
+font-size:46px;
 }
 
-@keyframes slideUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+.temp{
+font-size:70px;
 }
 
-.loading {
-    text-align: center;
-    padding: 60px;
-    color: #d4a574;
+.details{
+grid-template-columns:repeat(2,1fr);
 }
 
-.suggestions-dropdown {
-    margin-top: 8px;
-    max-height: 150px;
-    overflow-y: auto;
-    background: rgba(0,0,0,0.9);
-    border-radius: 12px;
-    display: none;
+.forecast{
+grid-template-columns:repeat(4,1fr);
 }
 
-.suggestion-item {
-    padding: 10px 15px;
-    cursor: pointer;
-    border-bottom: 1px solid rgba(212,165,116,0.2);
-    color: #d4a574;
-    font-size: 12px;
+.dark-toggle{
+position:relative;
+margin-top:10px;
 }
 
-.suggestion-item:hover {
-    background: rgba(212,165,116,0.2);
 }
 
-@media (max-width: 600px) {
-    .title { font-size: 42px; }
-    .location { font-size: 32px; }
-    .temp { font-size: 62px; }
-    .forecast { gap: 4px; }
-    .day-card { padding: 8px 3px; }
-    .details { grid-template-columns: repeat(2, 1fr); }
-    .floating-cloud { width: 120px; top: -5px; left: -20px; }
-    .floating-cloud-2 { width: 80px; top: 30px; right: -10px; }
-    .dark-toggle { position: static; margin-bottom: 10px; }
-    .header { display: flex; flex-direction: column; }
-}
 </style>
+
 </head>
 <body>
 
 <div class="container">
+
+<div class="header">
+
+<div class="floating-cloud">☁️</div>
+
+<div class="title">
+Weather<span>Tiff</span>
+</div>
+
+<div class="subtitle">
+PREMIUM WEATHER INTELLIGENCE
+</div>
+
+<button class="dark-toggle" onclick="toggleDarkMode()">
+🌙 Dark
+</button>
+
+</div>
+
+<div class="locations-panel glass">
+
+<div class="locations-title">
+📍 MY LOCATIONS
+</div>
+
+<div class="locations-buttons" id="locationBtns"></div>
+
+<input
+id="addressInput"
+class="address-input"
+placeholder="Enter city or address">
+
+<button class="gps-btn" onclick="findMe()">
+📍 FIND ME
+</button>
+
+</div>
+
+<div id="weatherContent">
+<div class="loading">
+Loading WeatherTiff...
+</div>
+</div>
+
+</div>
+<div class="container">
+
     <div class="header">
-        <!-- Floating Clouds - Back by popular demand! -->
-        <svg class="floating-cloud" viewBox="0 0 200 100" fill="white">
-            <ellipse cx="80" cy="40" rx="35" ry="20" fill="white" opacity="0.9"/>
-            <ellipse cx="50" cy="50" rx="30" ry="18" fill="white" opacity="0.85"/>
-            <ellipse cx="110" cy="50" rx="30" ry="18" fill="white" opacity="0.85"/>
-            <ellipse cx="80" cy="55" rx="40" ry="15" fill="white" opacity="0.7"/>
+
+        <!-- SINGLE FLOATING CLOUD -->
+        <svg class="floating-cloud" viewBox="0 0 220 120">
+            <ellipse cx="90" cy="55" rx="50" ry="28" fill="white" opacity="0.85"/>
+            <ellipse cx="55" cy="65" rx="38" ry="22" fill="white" opacity="0.8"/>
+            <ellipse cx="130" cy="65" rx="40" ry="24" fill="white" opacity="0.8"/>
+            <ellipse cx="95" cy="78" rx="55" ry="18" fill="white" opacity="0.7"/>
         </svg>
-        
-        <svg class="floating-cloud-2" viewBox="0 0 150 80" fill="white">
-            <ellipse cx="60" cy="30" rx="25" ry="15" fill="white" opacity="0.7"/>
-            <ellipse cx="40" cy="38" rx="20" ry="12" fill="white" opacity="0.65"/>
-            <ellipse cx="80" cy="38" rx="22" ry="13" fill="white" opacity="0.65"/>
-        </svg>
+
+        <button class="dark-toggle" onclick="toggleDarkMode()">
+            🌙 Dark
+        </button>
 
         <div class="title">
             Weather<span>Tiff</span>
         </div>
+
         <div class="subtitle">
             PREMIUM WEATHER INTELLIGENCE
         </div>
-        <button class="dark-toggle" onclick="toggleDarkMode()">🌙 Dark</button>
+
     </div>
 
     <div class="locations-panel">
-        <div class="locations-title">📍 MY LOCATIONS</div>
+
+        <div class="locations-title">
+            📍 MY LOCATIONS
+        </div>
+
         <div class="locations-buttons" id="locationBtns"></div>
-        <input type="text" id="addressInput" class="address-input" placeholder="Enter address or city..." onkeyup="searchAddress(this.value)" onkeypress="handleAddressKeypress(event)">
+
+        <button class="gps-btn" onclick="findMe()">
+            📍 FIND ME
+        </button>
+
+        <input
+            type="text"
+            id="addressInput"
+            class="address-input"
+            placeholder="Enter city, ZIP, or address..."
+            onkeyup="searchAddress(this.value)"
+            onkeypress="handleAddressKeypress(event)"
+        >
+
         <div id="suggestions" class="suggestions-dropdown"></div>
+
     </div>
 
     <div id="weatherContent">
-        <div class="loading">🌤️ Loading weather data...</div>
+        <div class="loading">
+            🌤️ Loading Weather Intelligence...
+        </div>
     </div>
+
 </div>
-
-<script>
-// ========== STORAGE & LOCATIONS ==========
-let savedLocs = [];
-let currentLoc = null;
-let notifOn = false;
-
-// Default Florida locations
-const defaultLocs = [
-    { name: "Brooksville", lat: 28.555, lon: -82.387 },
-    { name: "Tampa", lat: 27.9506, lon: -82.4572 },
-    { name: "Orlando", lat: 28.5383, lon: -81.3792 },
-    { name: "Miami", lat: 25.7617, lon: -80.1918 }
-];
-
-function saveToStorage() {
-    localStorage.setItem("wtLocs", JSON.stringify(savedLocs));
+.gps-btn{
+    width:100%;
+    margin-bottom:12px;
+    padding:12px;
+    border:none;
+    border-radius:40px;
+    cursor:pointer;
+    font-weight:800;
+    background:linear-gradient(135deg,#d4a574,#f2c48b);
+    color:#1a2332;
+    transition:.3s;
 }
 
-function loadFromStorage() {
-    const saved = localStorage.getItem("wtLocs");
-    if (saved && JSON.parse(saved).length > 0) {
-        savedLocs = JSON.parse(saved);
-        currentLoc = savedLocs[0];
-    } else {
-        savedLocs = [...defaultLocs];
-        currentLoc = savedLocs[0];
-        saveToStorage();
-    }
-    updateLocationButtons();
+.gps-btn:hover{
+    transform:translateY(-2px);
 }
 
-function updateLocationButtons() {
-    let html = "";
-    savedLocs.forEach((loc, i) => {
-        let activeClass = currentLoc && loc.name === currentLoc.name ? "active" : "inactive";
-        html += `<button class="loc-btn ${activeClass}" onclick="switchLocation(${i})">${loc.name}</button>`;
-    });
-    document.getElementById("locationBtns").innerHTML = html;
+.locations-panel{
+    background:rgba(255,255,255,.08);
+    backdrop-filter:blur(24px);
+    -webkit-backdrop-filter:blur(24px);
+    border:1px solid rgba(255,255,255,.15);
 }
 
-function switchLocation(index) {
-    currentLoc = savedLocs[index];
-    updateLocationButtons();
-    loadAllWeather();
-    showToast(`📍 ${currentLoc.name}`);
+.card{
+    background:rgba(255,255,255,.08);
+    backdrop-filter:blur(30px);
+    -webkit-backdrop-filter:blur(30px);
+    border:1px solid rgba(255,255,255,.15);
+    box-shadow:0 8px 30px rgba(0,0,0,.25);
 }
+ async function findMe() {
 
-function showToast(msg) {
-    let old = document.querySelector(".toast");
-    if (old) old.remove();
-    let toast = document.createElement("div");
-    toast.className = "toast";
-    toast.innerText = msg;
-    document.body.appendChild(toast);
-    setTimeout(() => toast.remove(), 2500);
-}
-
-// Address search
-let searchTimeout;
-async function searchAddress(query) {
-    const suggestionsDiv = document.getElementById('suggestions');
-    if (!query || query.length < 3) {
-        suggestionsDiv.style.display = 'none';
+    if (!navigator.geolocation) {
+        showToast("❌ GPS not supported");
         return;
     }
-    clearTimeout(searchTimeout);
-    searchTimeout = setTimeout(async () => {
-        try {
-            const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=5&countrycodes=us`;
-            const response = await fetch(url, { headers: { 'User-Agent': 'WeatherTiff/1.0' } });
-            const data = await response.json();
-            if (data.length > 0) {
-                suggestionsDiv.innerHTML = data.map(item => `
-                    <div class="suggestion-item" onclick="selectAddress(${item.lat}, ${item.lon}, '${item.display_name.replace(/'/g, "\\'")}')">
-                        📍 ${item.display_name.substring(0, 60)}
-                    </div>
-                `).join('');
-                suggestionsDiv.style.display = 'block';
-            } else {
-                suggestionsDiv.style.display = 'none';
-            }
-        } catch(e) { suggestionsDiv.style.display = 'none'; }
-    }, 500);
-}
 
-function selectAddress(lat, lon, name) {
-    document.getElementById('addressInput').value = name;
-    document.getElementById('suggestions').style.display = 'none';
-    const newLoc = { name: name.split(',')[0], lat: parseFloat(lat), lon: parseFloat(lon) };
-    if (!savedLocs.some(l => l.name === newLoc.name)) {
-        savedLocs.push(newLoc);
-        saveToStorage();
-        updateLocationButtons();
-        showToast(`✅ Added ${newLoc.name}`);
-        currentLoc = newLoc;
-        loadAllWeather();
-    } else {
-        showToast(`📍 ${newLoc.name} already in list`);
-    }
-}
+    navigator.geolocation.getCurrentPosition(
 
-function handleAddressKeypress(e) {
-    if (e.key === 'Enter') {
-        document.getElementById('suggestions').style.display = 'none';
-        const query = e.target.value;
-        if (query) quickAddAddress(query);
-    }
-}
+        async(position)=>{
 
-async function quickAddAddress(query) {
-    try {
-        const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1&countrycodes=us`;
-        const response = await fetch(url, { headers: { 'User-Agent': 'WeatherTiff/1.0' } });
-        const data = await response.json();
-        if (data.length > 0) {
-            const item = data[0];
-            const newLoc = { name: item.display_name.split(',')[0], lat: parseFloat(item.lat), lon: parseFloat(item.lon) };
-            if (!savedLocs.some(l => l.name === newLoc.name)) {
-                savedLocs.push(newLoc);
-                saveToStorage();
-                updateLocationButtons();
-                showToast(`✅ Added ${newLoc.name}`);
-                currentLoc = newLoc;
-                loadAllWeather();
-            } else {
-                showToast(`📍 ${newLoc.name} already in list`);
-            }
-        } else {
-            showToast(`❌ Address not found`);
+            currentLoc = {
+                name:"My Location",
+                lat:position.coords.latitude,
+                lon:position.coords.longitude
+            };
+
+            showToast("📍 GPS Location Found");
+
+            loadAllWeather();
+        },
+
+        ()=>{
+            showToast("❌ GPS Permission Denied");
         }
-    } catch(e) { showToast(`❌ Search error`); }
+
+    );
+}
+.floating-cloud {
+    .floating-cloud{
+    position:absolute;
+    top:45px;
+    left:-120px;
+    width:180px;
+    opacity:.65;
+    pointer-events:none;
+    animation:cloudMove 28s linear infinite;
+    z-index:5;
 }
 
-// ========== WEATHER API ==========
-async function getRealWeather() {
-    try {
-        let url = `https://api.open-meteo.com/v1/forecast?latitude=${currentLoc.lat}&longitude=${currentLoc.lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,uv_index&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=auto&temperature_unit=fahrenheit`;
-        let resp = await fetch(url);
-        return await resp.json();
-    } catch(e) { return null; }
-}
-
-async function getAirQuality() {
-    try {
-        let url = `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${currentLoc.lat}&longitude=${currentLoc.lon}&current=us_aqi`;
-        let resp = await fetch(url);
-        return await resp.json();
-    } catch(e) { return null; }
-}
-
-// ========== DARK MODE ==========
-function toggleDarkMode() {
-    document.body.classList.toggle("light-mode");
-    const btn = document.querySelector(".dark-toggle");
-    btn.innerHTML = document.body.classList.contains("light-mode") ? "☀️ Light" : "🌙 Dark";
-}
-
-// ========== NOTIFICATIONS ==========
-function enableNotifications() {
-    notifOn = !notifOn;
-    const btn = document.getElementById("notifyBtn");
-    if (btn) {
-        btn.innerText = notifOn ? "✅ Alerts Enabled" : "🔔 Enable Weather Alerts";
-        btn.classList.toggle("enabled");
+@keyframes cloudMove{
+    0%{
+        left:-180px;
     }
-    if (notifOn && "Notification" in window) Notification.requestPermission();
-}
 
-// ========== RELOAD WINDY MAP ==========
-function refreshMap() {
-    const mapFrame = document.getElementById('windyFrame');
-    if (mapFrame) {
-        mapFrame.src = mapFrame.src;
-        showToast("🔄 Radar refreshed");
+    100%{
+        left:100%;
     }
 }
-
-// ========== RENDER UI ==========
-const iconMap = { 0:"☀️",1:"🌤️",2:"⛅",3:"☁️",45:"🌫️",61:"🌧️",63:"🌧️",65:"🌧️",71:"❄️",80:"🌦️",95:"⛈️",99:"⛈️" };
-const descMap = { 0:"Clear",1:"Mostly clear",2:"Partly cloudy",3:"Overcast",45:"Foggy",61:"Rain",63:"Rain",65:"Heavy rain",71:"Snow",80:"Showers",95:"Thunderstorm",99:"Severe storm" };
-
-async function loadAllWeather() {
-    if (!currentLoc) loadFromStorage();
-    document.getElementById("weatherContent").innerHTML = '<div class="loading">🌤️ Loading weather data...</div>';
-    
-    const weather = await getRealWeather();
-    const airQuality = await getAirQuality();
-    
-    if (!weather) {
-        document.getElementById("weatherContent").innerHTML = '<div class="loading">⚠️ Unable to load weather</div>';
-        return;
-    }
-    
-    const curr = weather.current;
-    const daily = weather.daily;
-    
-    let sunrise = daily.sunrise?.[0]?.split("T")[1]?.slice(0,5) || "6:42 AM";
-    let sunset = daily.sunset?.[0]?.split("T")[1]?.slice(0,5) || "8:31 PM";
-    let uv = curr.uv_index ? Math.round(curr.uv_index) : 5;
-    let temp = Math.round(curr.temperature_2m);
-    let feels = Math.round(curr.apparent_temperature);
-    let wind = Math.round(curr.wind_speed_10m);
-    let humidity = curr.relative_humidity_2m;
-    let icon = iconMap[curr.weather_code] || "🌡️";
-    let desc = descMap[curr.weather_code] || "Variable";
-    
-    // Air Quality
-    let aqi = "42", aqiLabel = "Good";
-    if (airQuality?.current?.us_aqi) {
-        aqi = airQuality.current.us_aqi;
-        if (aqi <= 50) aqiLabel = "Good";
-        else if (aqi <= 100) aqiLabel = "Moderate";
-        else aqiLabel = "Unhealthy";
-    }
-    
-    const pollen = ["Low", "Moderate", "High"][Math.floor(Math.random() * 3)];
-    
-    // Alerts
-    let alertsHtml = "";
-    if (curr.weather_code >= 95) {
-        alertsHtml = `<div class="alert-item alert-critical" onclick="showToast('⚠️ SEVERE THUNDERSTORM WARNING! Take cover.')"><div class="alert-title">⚠️ SEVERE THUNDERSTORM WARNING</div></div>`;
-    } else if (wind > 35) {
-        alertsHtml = `<div class="alert-item" onclick="showToast('💨 High wind warning: ${wind} mph')"><div class="alert-title">💨 HIGH WIND WARNING - ${wind} mph</div></div>`;
-    } else {
-        alertsHtml = `<div class="no-alerts" onclick="showToast('✅ No active alerts')">✓ No severe weather alerts | Monitoring conditions</div>`;
-    }
-    
-    // Storms
-    let stormsHtml = "";
-    if (curr.weather_code >= 95) {
-        stormsHtml = `<div class="storm-item" onclick="showToast('⛈️ Storm system detected nearby')"><div class="storm-name">⛈️ SEVERE THUNDERSTORM</div><div class="storm-info">Approaching from west • Moving NE at 35 mph</div></div>`;
-    } else {
-        stormsHtml = `<div class="no-alerts" onclick="showToast('No storm threats detected')">No active storms detected | Real-time tracking enabled</div>`;
-    }
-    
-    // 7-day forecast
-    let forecastHtml = "";
-    const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-    for (let i = 0; i < 7; i++) {
-        let high = Math.round(daily.temperature_2m_max[i]);
-        let low = Math.round(daily.temperature_2m_min[i]);
-        let dayIcon = iconMap[daily.weather_code[i]] || "🌤️";
-        forecastHtml += `
-            <div class="day-card" onclick="showToast('📅 ${days[i]}: High ${high}°F / Low ${low}°F')">
-                <div class="day">${days[i]}</div>
-                <div class="icon">${dayIcon}</div>
-                <div class="high">${high}°</div>
-                <div class="low">${low}°</div>
-            </div>
-        `;
-    }
-    
-    // Windy Radar Embed URL
-    const windyUrl = `https://embed.windy.com/embed2.html?lat=${currentLoc.lat}&lon=${currentLoc.lon}&detailLat=${currentLoc.lat}&detailLon=${currentLoc.lon}&zoom=7&level=surface&overlay=radar&menu=&message=&marker=&calendar=&pressure=&type=map&location=coordinates&metricWind=mph&metricTemp=°F&radarRange=-1`;
-    
-    const fullHtml = `
-        <div class="card">
-            <div class="location">${currentLoc.name}</div>
-            <div class="temp">${temp}°</div>
-            <div class="condition">${desc} • Feels like ${feels}°</div>
-            <div class="details">
-                <div class="detail"><div class="label">WIND</div><div class="value">${wind} mph</div></div>
-                <div class="detail"><div class="label">HUMIDITY</div><div class="value">${humidity}%</div></div>
-                <div class="detail"><div class="label">UV INDEX</div><div class="value">${uv}</div></div>
-                <div class="detail"><div class="label">CONDITION</div><div class="value">${icon}</div></div>
-            </div>
-            <div class="extended-details">
-                <div class="detail"><div class="label">SUNRISE</div><div class="value">${sunrise}</div></div>
-                <div class="detail"><div class="label">SUNSET</div><div class="value">${sunset}</div></div>
-            </div>
-        </div>
-        
-        <div class="card">
-            <div class="label" style="margin-bottom:12px;">🗺️ LIVE WINDY RADAR MAP</div>
-            <div class="radar">
-                <iframe id="windyFrame" src="${windyUrl}" loading="lazy"></iframe>
-            </div>
-            <div class="map-controls">
-                <button class="map-btn" onclick="refreshMap()">🔄 Refresh Radar</button>
-                <button class="map-btn" onclick="window.open('${windyUrl}', '_blank')">🗺️ Full Screen</button>
-            </div>
-        </div>
-        
-        <div class="card">
-            <div class="label" style="margin-bottom:12px;">🌿 AIR QUALITY & POLLEN</div>
-            <div class="aqi-grid">
-                <div class="aqi-card" onclick="showToast('AQI: ${aqi} - ${aqiLabel} air quality')">
-                    <div class="aqi-value">${aqi}</div>
-                    <div class="label">AQI • ${aqiLabel}</div>
-                </div>
-                <div class="aqi-card" onclick="showToast('Pollen level: ${pollen}')">
-                    <div class="aqi-value">${pollen}</div>
-                    <div class="label">POLLEN LEVEL</div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="card">
-            <div class="label" style="margin-bottom:12px;">⚠️ WEATHER ALERTS</div>
-            ${alertsHtml}
-        </div>
-        
-        <div class="card">
-            <div class="label" style="margin-bottom:12px;">⛈️ STORM TRACKING</div>
-            ${stormsHtml}
-        </div>
-        
-        <div class="card">
-            <div class="label" style="margin-bottom:12px;">📈 7-DAY FORECAST</div>
-            <div class="forecast">${forecastHtml}</div>
-        </div>
-        
-        <div class="card">
-            <button class="notification-btn" id="notifyBtn" onclick="enableNotifications()">🔔 Enable Weather Alerts</button>
-        </div>
-    `;
-    
-    document.getElementById("weatherContent").innerHTML = fullHtml;
-}
-
-// Close suggestions on outside click
-document.addEventListener('click', function(e) {
-    if (!e.target.closest('.locations-panel')) {
-        document.getElementById('suggestions').style.display = 'none';
-    }
-});
-
-// ========== INIT ==========
-loadFromStorage();
-loadAllWeather();
-setInterval(() => { if (currentLoc) loadAllWeather(); }, 600000);
-</script>
-</body>
-</html>
