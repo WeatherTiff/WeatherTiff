@@ -568,13 +568,28 @@ body.light-mode .location {
         </div>
         <button class="dark-toggle" onclick="toggleDarkMode()">🌙 Dark</button>
     </div>
+<div class="locations-panel">
+    <div class="locations-title">📍 MY LOCATIONS</div>
 
-    <div class="locations-panel">
-        <div class="locations-title">📍 MY LOCATIONS</div>
-        <div class="locations-buttons" id="locationBtns"></div>
-        <input type="text" id="addressInput" class="address-input" placeholder="Enter address or city..." onkeyup="searchAddress(this.value)" onkeypress="handleAddressKeypress(event)">
-        <div id="suggestions" class="suggestions-dropdown"></div>
+    <div style="display:flex;gap:8px;margin-bottom:12px;">
+        <button class="map-btn" onclick="findMe()">📍 Find Me</button>
+        <button class="map-btn" onclick="clearLocations()">🗑 Clear Saved</button>
     </div>
+
+    <div class="locations-buttons" id="locationBtns"></div>
+
+    <input
+        type="text"
+        id="addressInput"
+        class="address-input"
+        placeholder="Enter city or address..."
+        onkeyup="searchAddress(this.value)"
+        onkeypress="handleAddressKeypress(event)"
+    >
+
+    <div id="suggestions" class="suggestions-dropdown"></div>
+</div>
+    
 
     <div id="weatherContent">
         <div class="loading">🌤️ Loading weather data...</div>
@@ -620,14 +635,99 @@ function updateLocationButtons() {
     });
     document.getElementById("locationBtns").innerHTML = html;
 }
+function clearLocations() {
 
+    if (!confirm("Remove all saved locations?")) return;
+
+    savedLocs = [...defaultLocs];
+
+    currentLoc = savedLocs[0];
+
+    saveToStorage();
+
+    updateLocationButtons();
+
+    loadAllWeather();
+
+    showToast("🗑 Locations reset");
+}
 function switchLocation(index) {
     currentLoc = savedLocs[index];
     updateLocationButtons();
     loadAllWeather();
     showToast(`📍 ${currentLoc.name}`);
 }
+    
+function findMe() {
 
+    if (!navigator.geolocation) {
+        showToast("❌ Geolocation not supported");
+        return;
+    }
+
+    showToast("📍 Finding your location...");
+
+    navigator.geolocation.getCurrentPosition(
+
+        async (position) => {
+
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+
+            try {
+
+                const url =
+                `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`;
+
+                const response = await fetch(url);
+
+                const data = await response.json();
+
+                const city =
+                data.address.city ||
+                data.address.town ||
+                data.address.village ||
+                "My Location";
+
+                const newLoc = {
+                    name: city,
+                    lat,
+                    lon
+                };
+
+                currentLoc = newLoc;
+
+                if (!savedLocs.some(
+                    l => l.name.toLowerCase() === city.toLowerCase()
+                )) {
+
+                    savedLocs.unshift(newLoc);
+
+                    saveToStorage();
+                }
+
+                updateLocationButtons();
+
+                loadAllWeather();
+
+                showToast(`📍 ${city}`);
+
+            } catch (err) {
+
+                showToast("❌ Unable to identify location");
+
+            }
+
+        },
+
+        () => {
+
+            showToast("❌ Location permission denied");
+
+        }
+
+    );
+}
 function showToast(msg) {
     let old = document.querySelector(".toast");
     if (old) old.remove();
