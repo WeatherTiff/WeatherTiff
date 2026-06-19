@@ -667,19 +667,34 @@ async function searchAddress(query) {
 }
 
 function selectAddress(lat, lon, name) {
-    document.getElementById('addressInput').value = name;
-    document.getElementById('suggestions').style.display = 'none';
-    const newLoc = { name: name.split(',')[0], lat: parseFloat(lat), lon: parseFloat(lon) };
-    if (!savedLocs.some(l => l.name === newLoc.name)) {
-        savedLocs.push(newLoc);
-        saveToStorage();
-        updateLocationButtons();
-        showToast(`✅ Added ${newLoc.name}`);
-        currentLoc = newLoc;
-        loadAllWeather();
-    } else {
-        showToast(`📍 ${newLoc.name} already in list`);
-    }
+
+    document.getElementById("addressInput").value = "";
+
+    document.getElementById("suggestions").style.display = "none";
+
+    const city = name.split(",")[0];
+
+    const newLoc = {
+        name: city,
+        lat: parseFloat(lat),
+        lon: parseFloat(lon)
+    };
+
+    currentLoc = newLoc;
+
+    savedLocs = savedLocs.filter(
+        l => l.name.toLowerCase() !== city.toLowerCase()
+    );
+
+    savedLocs.unshift(newLoc);
+
+    saveToStorage();
+
+    updateLocationButtons();
+
+    loadAllWeather();
+
+    showToast(`📍 ${city}`);
 }
 
 function handleAddressKeypress(e) {
