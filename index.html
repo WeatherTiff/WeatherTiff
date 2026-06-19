@@ -718,7 +718,7 @@ async function quickAddAddress(query) {
                 saveToStorage();
                 updateLocationButtons();
                 showToast(`✅ Added ${newLoc.name}`);
-                currentLoc = newLoc;
+                currentLoc = newLoc;document.getElementById("addressInput").value = "";
                 loadAllWeather();
             } else {
                 showToast(`📍 ${newLoc.name} already in list`);
