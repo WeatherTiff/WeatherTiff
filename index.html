@@ -602,14 +602,6 @@ let savedLocs = [];
 let currentLoc = null;
 let notifOn = false;
 
-// Default Florida locations
-const defaultLocs = [
-    { name: "Brooksville", lat: 28.555, lon: -82.387 },
-    { name: "Tampa", lat: 27.9506, lon: -82.4572 },
-    { name: "Orlando", lat: 28.5383, lon: -81.3792 },
-    { name: "Miami", lat: 25.7617, lon: -80.1918 }
-];
-
 function saveToStorage() {
     localStorage.setItem("wtLocs", JSON.stringify(savedLocs));
 }
