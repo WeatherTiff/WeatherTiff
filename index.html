@@ -779,16 +779,21 @@ async function searchAddress(query) {
 function selectAddress(lat, lon, name) {
 
     document.getElementById("addressInput").value = "";
-
     document.getElementById("suggestions").style.display = "none";
 
     const city = name.split(",")[0];
 
-    const newLoc = {
+    currentLoc = {
         name: city,
         lat: parseFloat(lat),
         lon: parseFloat(lon)
     };
+
+    // DO NOT SAVE SEARCHES
+    loadAllWeather();
+
+    showToast(`📍 Viewing ${city}`);
+}
 
     currentLoc = newLoc;
 
@@ -830,6 +835,28 @@ async function quickAddAddress(query) {
             showToast("❌ Address not found");
             return;
         }
+
+        const item = data[0];
+
+        currentLoc = {
+            name: item.display_name.split(",")[0],
+            lat: parseFloat(item.lat),
+            lon: parseFloat(item.lon)
+        };
+
+        document.getElementById("addressInput").value = "";
+        document.getElementById("suggestions").style.display = "none";
+
+        loadAllWeather();
+
+        showToast(`📍 Viewing ${currentLoc.name}`);
+
+    } catch (e) {
+
+        showToast("❌ Search error");
+
+    }
+}
 
         const item = data[0];
 
