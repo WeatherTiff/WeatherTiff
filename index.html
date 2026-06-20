@@ -860,6 +860,28 @@ async function quickAddAddress(query) {
 
         const item = data[0];
 
+        currentLoc = {
+            name: item.display_name.split(",")[0],
+            lat: parseFloat(item.lat),
+            lon: parseFloat(item.lon)
+        };
+
+        document.getElementById("addressInput").value = "";
+        document.getElementById("suggestions").style.display = "none";
+
+        loadAllWeather();
+
+        showToast(`📍 Viewing ${currentLoc.name}`);
+
+    } catch (e) {
+
+        showToast("❌ Search error");
+
+    }
+}
+
+        const item = data[0];
+
         const city = item.display_name.split(",")[0];
 
         const newLoc = {
