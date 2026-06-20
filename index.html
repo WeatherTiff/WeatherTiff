@@ -651,6 +651,23 @@ function clearLocations() {
 
     showToast("🗑 Locations reset");
 }
+    function wipeEverything() {
+
+    localStorage.removeItem("wtLocs");
+
+    savedLocs = [...defaultLocs];
+
+    currentLoc = savedLocs[0];
+
+    saveToStorage();
+
+    updateLocationButtons();
+
+    loadAllWeather();
+
+    showToast("✅ Storage wiped");
+    }
+    
 function switchLocation(index) {
     currentLoc = savedLocs[index];
     updateLocationButtons();
@@ -806,27 +823,58 @@ function handleAddressKeypress(e) {
 }
 
 async function quickAddAddress(query) {
+
     try {
-        const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1&countrycodes=us`;
-        const response = await fetch(url, { headers: { 'User-Agent': 'WeatherTiff/1.0' } });
+
+        const url =
+        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1`;
+
+        const response = await fetch(url);
+
         const data = await response.json();
-        if (data.length > 0) {
-            const item = data[0];
-            const newLoc = { name: item.display_name.split(',')[0], lat: parseFloat(item.lat), lon: parseFloat(item.lon) };
-            if (!savedLocs.some(l => l.name === newLoc.name)) {
-                savedLocs.push(newLoc);
-                saveToStorage();
-                updateLocationButtons();
-                showToast(`✅ Added ${newLoc.name}`);
-                currentLoc = newLoc;document.getElementById("addressInput").value = "";
-                loadAllWeather();
-            } else {
-                showToast(`📍 ${newLoc.name} already in list`);
-            }
-        } else {
-            showToast(`❌ Address not found`);
+
+        if (!data.length) {
+            showToast("❌ Address not found");
+            return;
         }
-    } catch(e) { showToast(`❌ Search error`); }
+
+        const item = data[0];
+
+        const city = item.display_name.split(",")[0];
+
+        const newLoc = {
+            name: city,
+            lat: parseFloat(item.lat),
+            lon: parseFloat(item.lon)
+        };
+
+        currentLoc = newLoc;
+
+        // Remove duplicate
+        savedLocs = savedLocs.filter(
+            l => l.name.toLowerCase() !== city.toLowerCase()
+        );
+
+        // Put newest at top
+        savedLocs.unshift(newLoc);
+
+        saveToStorage();
+
+        updateLocationButtons();
+
+        document.getElementById("addressInput").value = "";
+
+        document.getElementById("suggestions").style.display = "none";
+
+        loadAllWeather();
+
+        showToast(`📍 ${city}`);
+
+    } catch (e) {
+
+        showToast("❌ Search error");
+
+    }
 }
 
 // ========== WEATHER API ==========
